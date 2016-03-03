@@ -1,0 +1,86 @@
+/*--------------------GENERAL APPEARANCE----------------------*/
+
+body {
+	background: black;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	color: #adadad;
+}
+
+/*--------------------TOOL BAR----------------------*/
+
+#tool-bar {
+	background-color: #333333;
+	height: 50px;
+	width: 100%;
+}
+
+/*--------------------TOP SECTION----------------------*/
+
+#top-section {
+	position: absolute;
+	top: 50px;
+	bottom: 30%;
+	right: 0px;
+	left: 0px;
+}
+
+/*--------------------EDITOR SECTION----------------------*/
+
+#editor {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 35%;
+	left: 0px;
+	background: #1e1e1e;
+}
+
+/*--------------------PREVIEW SECTION----------------------*/
+
+#preview {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 65%;
+	background: #252526;
+}
+
+/*--------------------TOP SECTION----------------------*/
+
+#bottom-section {
+	position: absolute;
+	top: 70%;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+}
+
+
+/*--------------------FILE SECTION----------------------*/
+
+#files {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 50%;
+	left: 0px;
+	background: #161616;
+}
+
+/*--------------------LOG SECTION----------------------*/
+
+#logs {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 50%;
+	background: #121212;
+}
+
+/*--------------------ERROR SECTION----------------------*/
+
+/*--------------------STATUS BAR----------------------*/
