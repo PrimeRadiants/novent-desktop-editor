@@ -3,17 +3,32 @@
   <head>
     <meta charset="UTF-8">
 	<link rel="stylesheet" href="css/style.css">
+	<script src="js/jquery-2.2.1.min.js"></script>
+	<script src="js/resize.js"></script>
     <title>Novent Studio</title>
   </head>
   <body>
 	<header id="tool-bar"></header>
 	<section id="top-section">
-		<div id="editor"></div>
-		<div id="preview"></div>
+		<div id="editor">
+			<div class="resize-col resize-right resize-editor-preview"></div>
+		</div>
+		<div id="preview">
+			<div class="resize-col resize-left resize-editor-preview"></div>
+		</div>
+		<div class="resize-row resize-bottom resize-sections"></div>
 	</section>
 	<section id="bottom-section">
-		<div id="files"></div>
-		<div id="logs"></div>
+		<div class="resize-row resize-top resize-sections"></div>
+		<div id="files">
+			<div class="resize-col resize-right resize-files-logs"></div>
+		</div>
+		<div id="logs">
+			<div class="resize-col resize-left resize-files-logs"></div>
+		</div>
+		<div id="errors">
+			<div class="resize-col resize-left resize-files-logs"></div>
+		</div>
 	</section>
 	<footer id="status-bar"></footer>
   </body>

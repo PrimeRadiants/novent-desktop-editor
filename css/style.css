@@ -8,6 +8,40 @@ body {
 	color: #adadad;
 }
 
+.resize-row {
+	cursor: ns-resize;
+	position: absolute;
+	height: 2px;
+	right: 0;
+	left: 0;
+	z-index: 99999999999999;
+}
+
+.resize-bottom {
+	bottom: 0;
+}
+
+.resize-top {
+	top: 0;
+}
+
+.resize-col {
+	cursor: ew-resize;
+	position: absolute;
+	width: 2px;
+	top: 0;
+	bottom: 0;
+	z-index: 99999999999999;
+}
+
+.resize-right {
+	right: 0;
+}
+
+.resize-left {
+	left: 0;
+}
+
 /*--------------------TOOL BAR----------------------*/
 
 #tool-bar {
@@ -53,7 +87,7 @@ body {
 #bottom-section {
 	position: absolute;
 	top: 70%;
-	bottom: 0px;
+	bottom: 22px;
 	right: 0px;
 	left: 0px;
 }
@@ -83,4 +117,22 @@ body {
 
 /*--------------------ERROR SECTION----------------------*/
 
+#errors {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 50%;
+	background: #121212;
+}
+
 /*--------------------STATUS BAR----------------------*/
+
+#status-bar {
+	position: absolute;
+	height: 22px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	background: #17232a;
+}
