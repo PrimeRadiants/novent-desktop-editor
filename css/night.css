@@ -26,3 +26,5 @@
 
 .cm-s-night .CodeMirror-activeline-background {background: #1e1e1e; border: 1px solid #282828; }
 .cm-s-night .CodeMirror-matchingbracket { outline:1px solid grey; color:white !important; }
+
+.cm-s-night .CodeMirror-matchingtag {background: rgba(68, 68, 119, .99);}
