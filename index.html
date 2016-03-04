@@ -3,8 +3,17 @@
   <head>
     <meta charset="UTF-8">
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/codemirror.css">
+	<link rel="stylesheet" href="css/night.css">
+	<link rel="stylesheet" href="css/show-hint.css">
 	<script src="js/jquery-2.2.1.min.js"></script>
 	<script src="js/resize.js"></script>
+	<script src="js/codemirror.js"></script>
+	<script src="js/xml.js"></script>
+	<script src="js/active-line.js"></script>
+	<script src="js/show-hint.js"></script>
+	<script src="js/xml-hint.js"></script>
+	<script src="js/novent-hint.js"></script>
     <title>Novent Studio</title>
   </head>
   <body>
@@ -12,6 +21,23 @@
 	<section id="top-section">
 		<div id="editor">
 			<div class="resize-col resize-right resize-editor-preview"></div>
+			<textarea id="editor-textarea"></textarea>
+			<script>
+				var editor = CodeMirror.fromTextArea(document.getElementById("editor-textarea"), {
+				  lineNumbers: true,
+				  styleActiveLine: true,
+				  mode: "xml",
+				  extraKeys: {
+					  "'<'": completeAfter,
+					  "'/'": completeIfAfterLt,
+					  "' '": completeIfInTag,
+					  "'='": completeIfInTag,
+					  "Ctrl-Space": "autocomplete"
+					},
+					hintOptions: {schemaInfo: noventTags}
+				});
+				editor.setOption("theme", "night");
+			</script>
 		</div>
 		<div id="preview">
 			<div class="resize-col resize-left resize-editor-preview"></div>
