@@ -1,3 +1,4 @@
+'use strict';
 var methode = Novent.prototype;
 const ParseUtil = require("./ParseUtil.js");
 const ParseError = require("./ParseError.js");
@@ -14,6 +15,7 @@ function Novent(width, height, button, pages, errors) {
 
 Novent.fromNode = function(node, projectPath) {
 	var errors = new Array();
+	var pageNames = new Array();
 	
 	var width = ParseUtil.validatePositiveIntegerAttr(node, "width", errors);
 	var height = ParseUtil.validatePositiveIntegerAttr(node, "height", errors);
@@ -25,7 +27,7 @@ Novent.fromNode = function(node, projectPath) {
 	}
 	else {
 		if(buttonNodes.length > 1) {
-			for(i = 1; i < buttonNodes.length; i++)
+			for(let i = 1; i < buttonNodes.length; i++)
 				errors.push(new ParseError("Duplicate button tag.", buttonNodes.item(i).lineNumber));
 		}
 		
@@ -39,8 +41,8 @@ Novent.fromNode = function(node, projectPath) {
 	}
 	else {
 		var pages = new Array();
-		for(i = 0; i < pageNodes.length; i++)
-			pages.push(Page.fromNode(pageNodes.item(i), projectPath, errors));
+		for(let i = 0; i < pageNodes.length; i++)
+			pages.push(Page.fromNode(pageNodes.item(i), projectPath, pageNames, errors));
 		
 	}
 	

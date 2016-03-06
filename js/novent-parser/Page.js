@@ -3,6 +3,7 @@ var methode = Page.prototype;
 const ParseUtil = require("./ParseUtil.js");
 const Materials = require("./Materials.js");
 const Events = require("./Events.js");
+const ParseError = require("./ParseError.js");
 
 function Page(name, materials, events) {
 	this.name = name;
@@ -10,10 +11,22 @@ function Page(name, materials, events) {
 	this.events = events;
 }
 
-Page.fromNode = function(node, projectPath, errors) {
+Page.fromNode = function(node, projectPath, pageNames, errors) {
 	var materialNames = new Array();
 	
 	var name = ParseUtil.validateNonEmptyStringAttr(node, "name");
+	
+	var duplicate = false;
+	pageNames.forEach(function(e) {
+		if(e.name == name)
+			duplicate = true;
+	});
+	
+	if(duplicate)
+		errors.push(new ParseError("Duplicate page name.", node.lineNumber));
+	else
+		pageNames.push({name: name, type: node.nodeName});
+	
 	var materialsList = node.getElementsByTagName("materials");
 	
 	if(materialsList.length == 0)

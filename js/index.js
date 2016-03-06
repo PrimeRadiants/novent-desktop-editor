@@ -9,6 +9,31 @@ const Novent = require("./js/novent-parser/Novent.js");
 const XMLParser = require('xmldom').DOMParser;
 
 app.controller('editorController', function($scope) {
+	CodeMirror.registerHelper("lint", "xml", function(text, options) {
+		var found = [];
+		if(text == "")
+			return found;
+		
+		var doc = new XMLParser().parseFromString(text, 'text/xml');
+		var novent = Novent.fromNode(doc.getElementsByTagName("novent")[0], path.dirname(remote.getGlobal('filePath')));
+		console.log(doc);
+		console.log(novent);
+		for (var i = 0; i < novent.errors.length; i++) {
+		  var message = novent.errors[i].msg;
+		  var startLine = novent.errors[i].line;
+		  var endLine = novent.errors[i].line;
+		  var startCol = 0; 
+		  var endCol = 0;
+		  found.push({
+			from: CodeMirror.Pos(startLine - 1, startCol),
+			to: CodeMirror.Pos(endLine - 1, endCol),
+			message: message
+		  });
+		}
+		console.log(found);
+		return found;
+	});
+	
 	$scope.editor = CodeMirror.fromTextArea(document.getElementById("editor-textarea"), {
 	  lineNumbers: true,
 	  styleActiveLine: true,
@@ -24,7 +49,8 @@ app.controller('editorController', function($scope) {
 		matchTags: {bothTags: true},
 		autoCloseTags: true,
 		foldGutter: true,
-		gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
+		gutters: ["CodeMirror-lint-markers", "CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+		lint: true
 	});
 	$scope.editor.setOption("theme", "night");
 	
@@ -33,13 +59,7 @@ app.controller('editorController', function($scope) {
 		ipcRenderer.send('project-error', err); 
 		return;
 	  }
-	  console.log(data);
-	  $scope.editor.setValue(data);
-	  
-	  doc = new XMLParser().parseFromString($scope.editor.getValue(), 'text/xml');
-	  console.log(doc);
-	  
-	  console.log(Novent.fromNode(doc.getElementsByTagName("novent")[0], path.dirname(remote.getGlobal('filePath'))));
+	  $scope.editor.setValue(data);	
 	});
 	
 	$scope.loadDirectoryFiles = function() {

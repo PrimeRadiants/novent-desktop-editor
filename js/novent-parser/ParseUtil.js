@@ -4,7 +4,7 @@ const ParseError = require("./ParseError.js");
 var ParseUtil = new Object();
 
 ParseUtil.validateNonEmptyStringAttr = function(node, attrName, errors) {
-	if(!node.hasAttribute(attrName)) {
+	if(!node.hasAttribute(attrName) || node.getAttribute(attrName) == "") {
 		errors.push(new ParseError("Missing attribute " + attrName + ".", node.lineNumber));
 		return null;
 	}
@@ -34,7 +34,7 @@ ParseUtil.validateIntegerAttr = function(node, attrName, errors) {
 	
 	var result = Number.parseInt(attr);
 	
-	if(result == NaN) {
+	if(Number.isNaN(result)) {
 		errors.push(new ParseError("Invalid attribute " + attrName + ", must be an integer.", node.lineNumber));
 	}
 	
@@ -62,7 +62,7 @@ ParseUtil.validateRealAttr = function(node, attrName, errors) {
 	
 	var result = Number.parseFloat(attr);
 	
-	if(result == NaN) {
+	if(Number.isNaN(result)) {
 		errors.push(new ParseError("Invalid attribute " + attrName + ", must be an integer.", node.lineNumber));
 	}
 	
