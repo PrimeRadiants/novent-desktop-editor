@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="UTF-8">
+	<link rel="stylesheet" href="css/dialog.css">
+	<script src="js/angular.min.js"></script>
+	<script src="js/dialog.js"></script>
+    <title>Welcome in Novent Studio</title>
+  </head>
+  <body ng-controller="dialogController">
+	<header id="novent-studio-banner"></header>
+	<section id="recent-projects">
+		<h3>Recent Projects</h3>
+		<div class="projects">
+			<div class="project">
+				<span class="project-icon"></span>
+				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
+			</div>
+			<div class="project">
+				<span class="project-icon"></span>
+				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
+			</div>
+			<div class="project">
+				<span class="project-icon"></span>
+				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
+			</div>
+			<div class="project">
+				<span class="project-icon"></span>
+				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
+			</div>
+			<div class="project">
+				<span class="project-icon"></span>
+				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
+			</div>
+		</div>
+	</section>
+	<span id="separator"></span>
+	<section id="actions">
+		<table>
+			<tr>
+				<td>
+					<div class="action">
+						<span class="action-icon open" ng-click="openExistingProject()"></span>
+						<a class="action-link" ng-click="openExistingProject()">Open a project</a>
+					</div>
+				</td>
+				<td>
+					<div class="action">
+						<span class="action-icon new" ng-click="createNewProject()"></span>
+						<a class="action-link" ng-click="createNewProject()">New novent</a>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="action">
+						<span class="action-icon help" ng-click="gotToDoc()"></span>
+						<a class="action-link" ng-click="gotToDoc()">Help and support</a>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</section>
+	<section id="close-section">
+		<button id="close" ng-click="closeDialog()">Close</button>
+	</section>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+body {
+	background-color: #1e1e1e;
+	font-family: arial;
+	color: #adadad;
+}
+
+#close {
+	float: right;
+	border: 2px solid black;
+	color: #adadad;
+	padding: 3px 14px;
+	background: #121212;
+	cursor: pointer;
+}
+
+#close:focus {
+	outline: -webkit-focus-ring-color auto 0px;
+}
+
+.error-icon {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: url('../images/ERROR_64px.png');
+	background-size: contain;
+	float: left;
+	margin-right: 10px;
+}

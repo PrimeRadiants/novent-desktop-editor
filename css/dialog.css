@@ -1,0 +1,135 @@
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 700px;
+	background-color: #1e1e1e;
+	font-family: arial;
+	color: #adadad;
+	height: 350px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+h3 {
+	font-weight: 100;
+	font-size: 15px;
+}
+
+#novent-studio-banner {
+	width: 700px;
+	height: 100px;
+	background: url('../images/app-banner.png');
+	border-bottom: 1px solid #1d1d1d;
+}
+
+#recent-projects {
+	position: absolute;
+	top: 101px;
+	height: 210px;
+	right: 350px;
+	left: 0px;
+	padding: 5px 25px;
+}
+
+.project {
+	padding: 5px 0;
+}
+
+.project-icon {
+	height: 16px;
+	width: 16px;
+	display: inline-block;
+	background: url('../images/PR_LOGO_32px.png');
+	background-size: contain;
+}
+
+.project a {
+	color: #059a91;
+    text-decoration: underline;
+    font-size: 13px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 279px;
+    display: inline-block;
+	cursor: pointer;
+	line-height: 16px;
+}
+
+#separator {
+	position: absolute;
+	top: 121px;
+	right: 350px;
+	bottom: 40px;
+	width: 1px;
+	background-color: #4e4e4e;
+}
+
+#actions {
+	position: absolute;
+	top: 101px;
+	right: 0;
+	left: 350px;
+	padding: 65px 20px;
+}
+
+.action {
+	padding: 0 15px;
+}
+
+.action-icon {
+	height: 32px;
+	width: 32px;
+	background-color: #059a91;
+	display: inline-block;
+}
+
+.action-icon.new {
+	background: url('../images/PR_LOGO_64px.png');
+	background-size: contain;
+}
+
+.action-icon.help {
+	background: url('../images/PR_DOC_64px.png');
+	background-size: contain;
+}
+
+.action-icon.open {
+	background: url('../images/PR_FOLDER_64px.png');
+	background-size: contain;
+}
+
+.action a {
+	color: #059a91;
+    text-decoration: underline;
+    font-size: 13px;
+    display: inline-block;
+	cursor: pointer;
+	line-height: 32px;
+	position: relative;
+    top: -12px;
+}
+
+#close-section {
+	position: absolute;
+	top: 320px;
+	bottom: 0px;
+	right: 0;
+	left: 0;
+	padding: 0 20px;
+}
+
+#close {
+	float: right;
+	border: 2px solid black;
+	color: #adadad;
+	padding: 3px 14px;
+	background: #121212;
+	cursor: pointer;
+}
+
+#close:focus {
+    outline: -webkit-focus-ring-color auto 0px;
+}

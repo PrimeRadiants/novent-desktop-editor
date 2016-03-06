@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="UTF-8">
+    <title>Novent Project Error</title>
+	<link rel="stylesheet" href="css/error.css">
+	<script src="js/angular.min.js"></script>
+	<script src="js/error.js"></script>
+  </head>
+  <body ng-controller="errorController">
+	<section style="padding: 20px 20px;">
+		<span class="error-icon"></span>
+		<span>
+			<script>document.write(unescape(getQueryVariable("error")));</script>
+		</span>
+	</section>
+	<section style="padding: 0 20px;">
+		<button id="close" ng-click="closeDialog()">Close</button>
+	</section>
+  </body>
+</html>
