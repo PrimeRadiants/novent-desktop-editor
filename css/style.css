@@ -92,6 +92,20 @@ body {
 	left: 0px;
 }
 
+#iframe-container {
+	position: absolute;
+    top: 30px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#iframe-container iframe {
+	height: 100%;
+    width: 100%;
+	border: 0;
+}
+
 
 /*--------------------FILE SECTION----------------------*/
 

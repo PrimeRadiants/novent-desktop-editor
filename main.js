@@ -16,6 +16,7 @@ let newProjectWindow;
 
 global.filePath = null;
 global.newProjectPath = app.getPath("documents");
+global.dirname = __dirname
 
 function main() {
 	if(global.filePath != null && path.extname(process.argv[1]) == ".noventproj")

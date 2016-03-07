@@ -5,8 +5,11 @@ const remote = require('remote');
 const path = require('path');
 const fs = require('fs-extra');
 const dirTree = require('directory-tree');
-const Novent = require("./js/novent-parser/Novent.js");
+const NoventParser = require("./js/novent-parser/NoventParser.js");
+const NoventCompiler = require("./js/novent-parser/NoventCompiler.js");
 const XMLParser = require('xmldom').DOMParser;
+
+window.$ = window.jQuery = require('./js/jquery-2.2.1.min.js');
 
 app.controller('editorController', function($scope) {
 	CodeMirror.registerHelper("lint", "xml", function(text, options) {
@@ -14,14 +17,12 @@ app.controller('editorController', function($scope) {
 		if(text == "")
 			return found;
 		
-		var doc = new XMLParser().parseFromString(text, 'text/xml');
-		var novent = Novent.fromNode(doc.getElementsByTagName("novent")[0], path.dirname(remote.getGlobal('filePath')));
-		console.log(doc);
-		console.log(novent);
-		for (var i = 0; i < novent.errors.length; i++) {
-		  var message = novent.errors[i].msg;
-		  var startLine = novent.errors[i].line;
-		  var endLine = novent.errors[i].line;
+		$scope.novent = NoventParser.parse(text, path.dirname(remote.getGlobal('filePath')));
+		
+		for (var i = 0; i < $scope.novent.errors.length; i++) {
+		  var message = $scope.novent.errors[i].msg;
+		  var startLine = $scope.novent.errors[i].line;
+		  var endLine = $scope.novent.errors[i].line;
 		  var startCol = 0; 
 		  var endCol = 0;
 		  found.push({
@@ -68,5 +69,49 @@ app.controller('editorController', function($scope) {
 	
 	$scope.loadDirectoryFiles();
 	
+	$scope.previewURI = path.dirname(remote.getGlobal('filePath')) + "/novent.html";
 	
+	$scope.preview = function() {
+		if(!$scope.isInPreview) {
+			if($scope.novent.errors.length == 0) {
+				if(!fs.existsSync(path.dirname(remote.getGlobal('filePath')) + "/novent.html")) {
+					fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent.html", path.dirname(remote.getGlobal('filePath')) + "/novent.html");
+				}
+				
+				if(!fs.existsSync(path.dirname(remote.getGlobal('filePath')) + "/canvasengine-1.3.2.all.js")) {
+					fs.copySync(remote.getGlobal('dirname') + "/project-resources/canvasengine-1.3.2.all.js", path.dirname(remote.getGlobal('filePath')) + "/canvasengine-1.3.2.all.js");
+				}
+				
+				if(!fs.existsSync(path.dirname(remote.getGlobal('filePath')) + "/novent-reader.js")) {
+					fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent-reader.js", path.dirname(remote.getGlobal('filePath')) + "/novent-reader.js");
+				}
+				
+				console.log("test");
+				var script = NoventCompiler.compile($scope.novent);
+				fs.writeFile(path.dirname(remote.getGlobal('filePath')) + "/novent.js", script, (err) => {
+					if (err) {
+						console.log(err);
+						return;  
+					}
+
+					$scope.isInPreview = true;
+					var iframe = window.$("<iframe/>");
+					iframe.attr("src", path.dirname(remote.getGlobal('filePath')) + "/novent.html");
+					iframe.addClass("preview-iframe");
+					
+					iframe.get(0).onload = function() {
+						$(iframe.get(0).contentWindow.document).find("html").css("background", "#252526");
+					}
+					
+					window.$("#iframe-container").append(iframe);
+				});
+			}
+		}
+		else {
+			$scope.isInPreview = false;
+			window.$("#iframe-container").empty();
+		}
+		
+		$scope.isInPreview = $scope.isInPreview;
+	}
 });
