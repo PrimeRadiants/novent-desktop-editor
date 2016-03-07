@@ -12,7 +12,6 @@ const ipcMain = electron.ipcMain;
 
 let dialogWindow;
 let mainWindow;
-let errorWindow;
 
 global.filePath = null;
 
@@ -48,27 +47,8 @@ function openDialog () {
   });
 }
 
-function openErrorWindow(msg) {
-	errorWindow = new BrowserWindow({width: 400, height: 200, resizable: false});
-	errorWindow.setMenu(null);
-	errorWindow.loadURL('file://' + __dirname + '/error.html?error=' + msg);
-	
-	if(dialogWindow != null)
-		dialogWindow.close();
-	if(mainWindow != null)
-		mainWindow.close();
-	
-	ipcMain.on('error-close', function(event, arg) {
-	  errorWindow.close();
-	});
-	
-	errorWindow.on('closed', function() {
-		errorWindow = null;
-	});
-}
-
 ipcMain.on('project-error', function(event, arg) {
-	  openErrorWindow(arg);
+	  dialog.showErrorBox("Novent project error", arg);
 });
 
 function openEditor() {
@@ -84,7 +64,7 @@ function openEditor() {
 			});
 		}
 		else {
-			openErrorWindow("Invalid project directory: missing novent-descriptor.xml");
+			dialog.showErrorBox("Novent project error", "Invalid project directory: missing novent-descriptor.xml");
 		}
 	});
 	
