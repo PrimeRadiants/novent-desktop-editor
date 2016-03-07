@@ -8,5 +8,16 @@
     <title>New Novent Project</title>
   </head>
   <body ng-controller="newController">
+		<section id="new-project-form">
+			<div id="project-name-wrapper">
+				<span class="project-name-label">Project name: </span><input type="text" id="project-name" ng-model="projectName"/>
+			</div>
+			<div id="project-location-wrapper">
+				<button class="project-location-btn" ng-click="chooseProjectLocation()">Choose project location: </button><input type="text" id="project-location" ng-model="projectLocation" disabled/>
+			</div>
+		</section>
+		
+		<button id="cancel" ng-click="cancel()">Cancel</button>
+		<button id="create" ng-click="create()">Create project</button>
   </body>
 </html>
