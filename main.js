@@ -32,25 +32,26 @@ function openDialog () {
   dialogWindow.setMenu(null);
   dialogWindow.loadURL('file://' + __dirname + '/dialog.html');
   
-  ipcMain.on('dialog-close', function(event, arg) {
-	  dialogWindow.close();
-  });
-  
-  ipcMain.on('dialog-open-existing-project', function(event, arg) {
-	  openExistingProject();
-  });
-  
-  ipcMain.on('dialog-create-new-project', function(event, arg) {
-	  openCreateNewProjectDialog();
-  });
-  
   dialogWindow.on('closed', function() {
 	dialogWindow = null;
   });
 }
 
+ipcMain.on('dialog-close', function(event, arg) {
+	if(dialogWindow != null)
+		dialogWindow.close();
+});
+
+ipcMain.on('dialog-open-existing-project', function(event, arg) {
+  openExistingProject();
+});
+
+ipcMain.on('dialog-create-new-project', function(event, arg) {
+  openCreateNewProjectDialog();
+});
+
 ipcMain.on('project-error', function(event, arg) {
-	  dialog.showErrorBox("Novent project error", arg);
+	dialog.showErrorBox("Novent project error", arg);
 });
 
 function openEditor() {
@@ -95,68 +96,73 @@ function openExistingProject() {
 function openCreateNewProjectDialog() {
 	if(dialogWindow != null)
 		dialogWindow.hide();
-	newProjectWindow = new BrowserWindow({width: 716, height: 400, resizable: false});
+	newProjectWindow = new BrowserWindow({width: 716, height: 240, resizable: false});
 	newProjectWindow.setMenu(null);
 	newProjectWindow.loadURL('file://' + __dirname + '/new.html');
 	
-	ipcMain.on('new-project-close', function(event, arg) {
-		newProjectWindow.close();
+	newProjectWindow.on('closed', function() {
 		if(dialogWindow != null)
 			dialogWindow.show();
-	});
-	
-	ipcMain.on('choose-project-location', function(event, arg) {
-		dialog.showOpenDialog({properties: ['openDirectory']}, function(filePaths) {
-			//If no file selected, quit
-			if(filePaths == undefined) {
-				return;
-			}
-					
-			event.returnValue = filePaths[0];
-		});
-	});
-	
-	ipcMain.on('create-new-project', function(event, arg) {
-		if(dialogWindow != null)
-			dialogWindow.close();
-		createNewProject(arg.name, arg.location);
-	});
-	
-	newProjectWindow.on('closed', function() {
 		newProjectWindow = null;
 	});
 }
 
+ipcMain.on('new-project-close', function(event, arg) {
+	if(newProjectWindow != null)
+		newProjectWindow.close();
+});
+
+ipcMain.on('choose-project-location', function(event, arg) {
+	dialog.showOpenDialog({properties: ['openDirectory']}, function(filePaths) {
+		//If no file selected, quit
+		if(filePaths == undefined) {
+			return;
+		}
+				
+		event.returnValue = filePaths[0];
+	});
+});
+
+ipcMain.on('create-new-project', function(event, arg) {
+	createNewProject(arg.name, arg.location);
+});
+
 function createNewProject(projectName, projectPath) {
-	fs.mkdir(projectPath + "/" + projectName, (err) => {
-		fs.writeFile(projectPath + "/" + projectName + "/" + projectName + '.noventproj', '', (err) => {
-		  if (err) {
-			dialog.showErrorBox("Novent project error", JSON.stringify(err));
-			return;  
-		  }
-		  
-		  fs.copy(__dirname + "/project-resources/sample-descriptor.xml", projectPath + "/" + projectName + "/novent-descriptor.xml", function (err2) {
-			  if (err2) {
-				dialog.showErrorBox("Novent project error", JSON.stringify(err2));
+	console.log("test");
+	if(!fs.existsSync(projectPath + "/" + projectName)) {
+		fs.mkdir(projectPath + "/" + projectName, (err) => {
+			fs.writeFile(projectPath + "/" + projectName + "/" + projectName + '.noventproj', '', (err) => {
+			  if (err) {
+				dialog.showErrorBox("Novent project error", JSON.stringify(err));
 				return;  
 			  }
-			  fs.copy(__dirname + "/project-resources/button.png", projectPath + "/" + projectName + "/images/button.png", function (err3) {
-				  if (err3) {
-					dialog.showErrorBox("Novent project error", JSON.stringify(err3));
+			  
+			  fs.copy(__dirname + "/project-resources/sample-descriptor.xml", projectPath + "/" + projectName + "/novent-descriptor.xml", function (err2) {
+				  if (err2) {
+					dialog.showErrorBox("Novent project error", JSON.stringify(err2));
 					return;  
 				  }
-				  fs.copy(__dirname + "/project-resources/begin.png", projectPath + "/" + projectName + "/images/begin.png", function (err4) {
-					  if (err4) {
-						dialog.showErrorBox("Novent project error", JSON.stringify(err4));
+				  fs.copy(__dirname + "/project-resources/button.png", projectPath + "/" + projectName + "/images/button.png", function (err3) {
+					  if (err3) {
+						dialog.showErrorBox("Novent project error", JSON.stringify(err3));
 						return;  
 					  }
-					  global.filePath = projectPath + "/" + projectName + "/" + projectName + '.noventproj';
-					  openEditor();
+					  fs.copy(__dirname + "/project-resources/begin.png", projectPath + "/" + projectName + "/images/begin.png", function (err4) {
+						  if (err4) {
+							dialog.showErrorBox("Novent project error", JSON.stringify(err4));
+							return;  
+						  }
+						  global.filePath = projectPath + "/" + projectName + "/" + projectName + '.noventproj';
+						  openEditor();
+					  });
 				  });
 			  });
-		  });
+			});
 		});
-	});
+	}
+	else {
+		dialog.showErrorBox("Novent project error", "Folder " + projectPath + "/" + projectName + " already exists.");
+	}
 }
 
 app.on('open-file', function(e, path) {

@@ -9,12 +9,15 @@
   </head>
   <body ng-controller="newController">
 		<section id="new-project-form">
-			<div id="project-name-wrapper">
-				<span class="project-name-label">Project name: </span><input type="text" id="project-name" ng-model="projectName"/>
-			</div>
-			<div id="project-location-wrapper">
-				<button class="project-location-btn" ng-click="chooseProjectLocation()">Choose project location: </button><input type="text" id="project-location" ng-model="projectLocation" disabled/>
-			</div>
+			<table>
+				<tr>
+					<td colspan="2"><input type="text" id="project-name" ng-model="projectName" placeholder="Project Name"/></td>
+				</tr>
+				<tr>
+					<td><button class="project-location-btn" ng-click="chooseProjectLocation()">Choose project location: </button></td>
+					<td><input type="text" id="project-location" ng-model="projectLocation" disabled/></td>
+				</tr>
+			</table>
 		</section>
 		
 		<button id="cancel" ng-click="cancel()">Cancel</button>

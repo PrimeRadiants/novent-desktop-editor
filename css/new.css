@@ -6,8 +6,68 @@ body {
 	background-color: #1e1e1e;
 	font-family: arial;
 	color: #adadad;
-	height: 350px;
+	height: 200px;
 	position: absolute;
 	top: 0;
 	left: 0;
+}
+
+#new-project-form {
+	padding: 30px;
+}
+
+#new-project-form table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#new-project-form td {
+	white-space: nowrap;
+}
+
+#new-project-form td:first-child {
+	width: 1px;
+}
+
+#new-project-form input {
+	width: 100%;
+	padding: 8px;
+    font-size: 16px;
+	border-radius: 5px;
+	border: 1px solid black;
+	background: #545454;
+	box-sizing: border-box;
+}
+
+#project-location {
+	border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+	border-left: 0 !important;
+	height: 36px;
+    padding: 0 8px !important;
+	position: relative;
+    left: -2px;
+	margin-top:20px;
+	color: black;
+}
+
+.project-location-btn {
+	height: 36px;
+	background: #292929;
+	border: 1px solid black;
+	color: #adadad;
+	cursor: pointer;
+	border-top-left-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+	margin-top:20px;
+}
+
+#cancel, #create {
+	float: right;
+	border: 2px solid black;
+	color: #adadad;
+	padding: 3px 14px;
+	background: #121212;
+	cursor: pointer;
+	margin: 0px 10px;
 }
