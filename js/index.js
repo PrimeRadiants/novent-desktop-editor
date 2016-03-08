@@ -9,15 +9,17 @@ const NoventParser = require("./js/novent-parser/NoventParser.js");
 const NoventCompiler = require("./js/novent-parser/NoventCompiler.js");
 const XMLParser = require('xmldom').DOMParser;
 
-window.$ = window.jQuery = require('./js/jquery-2.2.1.min.js');
-
 app.controller('editorController', function($scope) {
+	
+	
 	CodeMirror.registerHelper("lint", "xml", function(text, options) {
 		var found = [];
 		if(text == "")
 			return found;
 		
-		$scope.novent = NoventParser.parse(text, path.dirname(remote.getGlobal('filePath')));
+		$scope.$apply(function () {
+			$scope.novent = NoventParser.parse(text, path.dirname(remote.getGlobal('filePath')));
+		});
 		
 		for (var i = 0; i < $scope.novent.errors.length; i++) {
 		  var message = $scope.novent.errors[i].msg;
@@ -93,25 +95,17 @@ app.controller('editorController', function($scope) {
 						console.log(err);
 						return;  
 					}
-
-					$scope.isInPreview = true;
-					var iframe = window.$("<iframe/>");
-					iframe.attr("src", path.dirname(remote.getGlobal('filePath')) + "/novent.html");
-					iframe.addClass("preview-iframe");
 					
-					iframe.get(0).onload = function() {
-						$(iframe.get(0).contentWindow.document).find("html").css("background", "#252526");
-					}
-					
-					window.$("#iframe-container").append(iframe);
+					$scope.$apply(function () {
+						$scope.isInPreview = true;
+						$scope.editor.setOption("readOnly", true);
+					});
 				});
 			}
 		}
 		else {
 			$scope.isInPreview = false;
-			window.$("#iframe-container").empty();
+			$scope.editor.setOption("readOnly", false);
 		}
-		
-		$scope.isInPreview = $scope.isInPreview;
 	}
 });

@@ -82,6 +82,42 @@ body {
 	background: #252526;
 }
 
+.preview-action {
+	text-align: center;
+	padding: 5px;
+	border-bottom: 1px solid #333333;
+}
+
+.preview-play {
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border: 1px solid #ccc;
+	width: 27px;
+	height: 22px;
+	background: transparent;
+	color: #00A4DB;
+	cursor: pointer;
+}
+
+.preview-play.disabled {
+	color: #A3A3A3;
+	cursor: default;
+}
+
+.preview-play.active {
+	color: #DB0000;
+	cursor: pointer;
+}
+
+#pageSelect {
+	height: 22px;
+    border: 1px solid #ccc;
+    position: relative;
+    left: -5px;
+    background: #252526;
+    color: #adadad;
+}
+
 /*--------------------TOP SECTION----------------------*/
 
 #bottom-section {
