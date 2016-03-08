@@ -9,6 +9,7 @@
 	<link rel="stylesheet" href="css/show-hint.css">
 	<link rel="stylesheet" href="css/foldgutter.css" />
 	<link rel="stylesheet" href="css/lint.css" />
+	<link rel="stylesheet" href="css/simplescrollbars.css" />
 	<link rel="stylesheet" href="css/font-awesome.min.css" />
 	<script src="js/angular.min.js"></script>
 	<script src="js/treeView.js"></script>
@@ -26,10 +27,32 @@
 	<script src="js/codemirror/closetag.js"></script>
 	<script src="js/codemirror/matchtags.js"></script>
 	<script src="js/codemirror/lint.js"></script>
+	<script src="js/simplescrollbars.js"></script>
     <title>Novent Studio</title>
   </head>
   <body ng-controller="editorController">
-	<header id="tool-bar"></header>
+	<header id="tool-bar">
+		<span>
+			<i class="fa fa-file-o" ng-click="new()"></i>
+			<i class="fa fa-folder-o" ng-click="open()"></i>
+			<i class="fa fa-floppy-o" ng-click="save()" ng-class="{'disabled': !canSave}"></i>
+			<i class="package-icon" ng-click="package()" ng-class="{'disabled': novent.errors.length != 0}"></i>
+		</span>
+		<span>
+			<i class="fa fa-scissors" ng-click="cut()"></i>
+			<i class="fa fa-files-o" ng-click="copy()"></i>
+			<i class="fa fa-clipboard" ng-click="paste()"></i>
+		</span>
+		<span>
+			<i class="fa fa-undo" ng-click="editor.undo()" ng-class="{'disabled': editor.historySize().undo == 0}"></i>
+			<i class="fa fa-repeat" ng-click="editor.redo()" ng-class="{'disabled': editor.historySize().redo == 0}"></i>
+			<i class="fa fa-search"></i>
+		</span>
+		<span>
+			<i class="fa fa-search-minus" ng-click="zoomOut()" ng-class="{'disabled': fontSize == 1}"></i>
+			<i class="fa fa-search-plus" ng-click="zoomIn()" ng-class="{'disabled': fontSize == 50}"></i>
+		</span>
+	</header>
 	<section id="top-section">
 		<div id="editor">
 			<div class="resize-col resize-right resize-editor-preview"></div>
@@ -48,19 +71,6 @@
 			</div>
 		</div>
 		<div class="resize-row resize-bottom resize-sections"></div>
-	</section>
-	<section id="bottom-section">
-		<div class="resize-row resize-top resize-sections"></div>
-		<div id="files">
-			<div class="resize-col resize-right resize-files-logs"></div>
-			<!--<div tree-view="files" tree-view-options="fileViewOptions"></div>-->
-		</div>
-		<div id="logs">
-			<div class="resize-col resize-left resize-files-logs"></div>
-		</div>
-		<div id="errors">
-			<div class="resize-col resize-left resize-files-logs"></div>
-		</div>
 	</section>
 	<footer id="status-bar"></footer>
   </body>

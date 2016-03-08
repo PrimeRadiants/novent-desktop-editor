@@ -58,7 +58,14 @@ ipcMain.on('project-error', function(event, arg) {
 function openEditor() {
 	fs.exists(path.dirname(global.filePath) + "/novent-descriptor.xml", function(exists) {
 		if(exists) {
+			if(mainWindow != null) {
+				mainWindow.reload();
+				return;
+			}
+				
+			
 			mainWindow = new BrowserWindow({width: 600, height: 800});
+			mainWindow.setMenu(null);
 			mainWindow.maximize();
 			mainWindow.loadURL('file://' + __dirname + '/index.html');
 			mainWindow.webContents.openDevTools();
@@ -117,6 +124,7 @@ ipcMain.on('choose-project-location', function(event, arg) {
 	dialog.showOpenDialog({properties: ['openDirectory']}, function(filePaths) {
 		//If no file selected, quit
 		if(filePaths == undefined) {
+			event.returnValue = arg;
 			return;
 		}
 				
@@ -165,6 +173,18 @@ function createNewProject(projectName, projectPath) {
 		dialog.showErrorBox("Novent project error", "Folder " + projectPath + "/" + projectName + " already exists.");
 	}
 }
+
+ipcMain.on('package-project', function(event, arg) {
+	dialog.showOpenDialog({properties: ['openDirectory']}, function(filePaths) {
+		//If no file selected, quit
+		if(filePaths == undefined) {
+			event.returnValue = null;
+			return;
+		}
+				
+		event.returnValue = filePaths[0];
+	});
+});
 
 app.on('open-file', function(e, path) {
 	e.preventDefault();

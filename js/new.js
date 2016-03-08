@@ -13,7 +13,7 @@ app.controller('newController', function($scope) {
 	});
 	
 	$scope.chooseProjectLocation = function() {
-		$scope.projectLocation = ipcRenderer.sendSync('choose-project-location', '');
+		$scope.projectLocation = ipcRenderer.sendSync('choose-project-location', $scope.projectLocation);
 	}
 	
 	$scope.cancel = function() {
