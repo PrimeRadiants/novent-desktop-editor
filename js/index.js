@@ -1,4 +1,4 @@
-var app = angular.module('app', []);
+var app = angular.module('app', ['AxelSoft']);
 const ipcRenderer = require('electron').ipcRenderer;
 const shell = require('electron').shell;
 const remote = require('remote');
@@ -9,7 +9,7 @@ const NoventParser = require("./js/novent-parser/NoventParser.js");
 const NoventCompiler = require("./js/novent-parser/NoventCompiler.js");
 const XMLParser = require('xmldom').DOMParser;
 
-app.controller('editorController', function($scope) {
+app.controller('editorController', function($scope, $interval) {
 	
 	
 	CodeMirror.registerHelper("lint", "xml", function(text, options) {
@@ -66,10 +66,14 @@ app.controller('editorController', function($scope) {
 	});
 	
 	$scope.loadDirectoryFiles = function() {
-		$scope.files = dirTree.directoryTree(path.dirname(remote.getGlobal('filePath')));
+		$scope.files = convertFileObject(dirTree.directoryTree(path.dirname(remote.getGlobal('filePath'))));
+		//$scope.files = dirTree.directoryTree(path.dirname(remote.getGlobal('filePath')));
+		//a = $scope.files;
+		console.log($scope.files);
 	}
 	
 	$scope.loadDirectoryFiles();
+	$interval($scope.loadDirectoryFiles, 2000);
 	
 	$scope.previewURI = path.dirname(remote.getGlobal('filePath')) + "/novent.html";
 	
@@ -108,4 +112,39 @@ app.controller('editorController', function($scope) {
 			$scope.editor.setOption("readOnly", false);
 		}
 	}
+	
+	$scope.breadcrums = [''];
+					
+	$scope.fileStructure = { folders: [
+		{ name: 'Folder 1', files: [{ name: 'File 1.jpg' }, { name: 'File 2.png' }], folders: [
+			{ name: 'Subfolder 1', files: [{ name: 'Subfile 1.txt' }] },
+			{ name: 'Subfolder 2' },
+			{ name: 'Subfolder 3' }
+		]},
+		{ name: 'Folder 2' }
+	], files: [{ name: 'File 1.gif' }, { name: 'File 2.gif' }]};
+	
+	$scope.fileViewOptions = {
+		onNodeSelect: function (node, breadcrums) {
+			$scope.breadcrums = breadcrums;
+		}
+	};
 });
+
+function convertFileObject(fileObject) {
+	var result = new Object();
+	result.name = fileObject.name;
+	result.folders = new Array();
+	result.files = new Array();
+	
+	if(fileObject.children != undefined) {
+		fileObject.children.forEach(function(e) {
+			if(e.type == "file")
+				result.files.push({name: e.name});
+			else if(e.type == "directory")
+				result.folders.push(convertFileObject(e));
+		});
+	}
+	
+	return result;
+}
