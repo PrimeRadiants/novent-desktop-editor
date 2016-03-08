@@ -3,8 +3,10 @@
 if(typeof NoventEngine == "undefined") {
 	var NoventEngine = new Object();
 	
-	NoventEngine.Novent = function(canvasId, buttonObj) {
+	NoventEngine.Novent = function(canvasId, width, height, buttonObj) {
 		var novent = this;
+		document.getElementById(canvasId).width = width;
+		document.getElementById(canvasId).height = height;
 		novent.canvas = CE.defines(canvasId).extend(Animation);
 		novent.button = buttonObj;
 		
@@ -22,7 +24,10 @@ if(typeof NoventEngine == "undefined") {
 			novent.canvas.Scene.call(novent.Pages.get(index).name);
 	}
 	NoventEngine.Novent.prototype.Pages.index = 0;
-	NoventEngine.Novent.prototype.start = function() {
+	NoventEngine.Novent.prototype.start = function(index) {
+		if(index != undefined && index < NoventEngine.Novent.prototype.Pages.list.length)
+			NoventEngine.Novent.prototype.Pages.index = index;
+		
 		novent.canvas.ready(function() { 
 			novent.Pages.read(novent.Pages.index);
 		});

@@ -9,8 +9,8 @@ const Wiggle = require("./Wiggle.js");
 
 var NoventCompiler = new Object();
 
-NoventCompiler.compile = function(novent) {
-	var script = "var novent = new NoventEngine.Novent(\"canvas_id\", " + JSON.stringify(novent.button) + ");";
+NoventCompiler.compile = function(novent, startPageIndex) {
+	var script = "var novent = new NoventEngine.Novent(\"canvas_id\", " + novent.width + "," + novent.height + "," + JSON.stringify(novent.button) + ");";
 	
 	novent.pages.forEach(function(page) {
 		script += "var page = novent.Pages.New(" + JSON.stringify(page) + ");";
@@ -19,6 +19,11 @@ NoventCompiler.compile = function(novent) {
 			script += "page.Events.New(function(canvas, readyObj, callback) {" + eventToJavascript(event.elements) + "});";
 		});
 	});
+	
+	if(startPageIndex != undefined)
+		script += "novent.start(" + startPageIndex + ");";
+	else
+		script += "novent.start();";
 	
 	return script;
 }

@@ -93,7 +93,7 @@ app.controller('editorController', function($scope, $interval) {
 				}
 				
 				console.log("test");
-				var script = NoventCompiler.compile($scope.novent);
+				var script = NoventCompiler.compile($scope.novent, $scope.pageSelect);
 				fs.writeFile(path.dirname(remote.getGlobal('filePath')) + "/novent.js", script, (err) => {
 					if (err) {
 						console.log(err);

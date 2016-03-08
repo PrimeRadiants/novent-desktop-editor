@@ -40,7 +40,7 @@
 			<div class="preview-action">
 				<button class="preview-play" ng-class="{'disabled': novent.errors.length != 0, 'active': isInPreview}" ng-click="preview()"><i class="fa fa-play"></i></button>
 				<select id="pageSelect" name="pageSelect" ng-model="pageSelect">
-				  <option ng-repeat="page in novent.pages" value="{{page.name}}">{{page.name}}</option>
+				  <option ng-repeat="page in novent.pages" value="{{$index}}">{{page.name}}</option>
 				</select>
 			</div>
 			<div id="iframe-container">
