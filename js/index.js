@@ -9,6 +9,7 @@ const NoventParser = require("./js/novent-parser/NoventParser.js");
 const NoventCompiler = require("./js/novent-parser/NoventCompiler.js");
 const XMLParser = require('xmldom').DOMParser;
 const asar = require('asar');
+window.$ = require("./js/jquery-2.2.1.min.js");
 
 app.controller('editorController', function($scope, $interval) {
 	
@@ -146,16 +147,9 @@ app.controller('editorController', function($scope, $interval) {
 	
 	$scope.save = function() {
 		console.log("test");
-		fs.writeFile($scope.projectPath + "/novent-descriptor.xml", $scope.editor.getValue(), (err) => {
-			if (err) {
-				console.log(err);
-				return;  
-			}
+		fs.writeFileSync($scope.projectPath + "/novent-descriptor.xml", $scope.editor.getValue());
 			
-			$scope.$apply(function () {
-				$scope.canSave = false;
-			});
-		});
+		$scope.canSave = false;
 	}
 	
 	$scope.package = function() {
@@ -209,6 +203,50 @@ app.controller('editorController', function($scope, $interval) {
 			$scope.$apply(function () {
 				$scope.open();
 			});
+		}
+	});
+	
+	
+	$(document).ready(function() {
+		var resizeEditorPreview = false;
+		
+		$(".resize-editor-preview").mousedown(function() {
+			resizeEditorPreview = true;
+		});
+		
+		$("#top-section").mouseup(function() {
+			resizeEditorPreview = false;
+			$("#top-section").css("cursor", "default");
+		});
+		
+		/*$(".resize-editor-preview").mouseleave(function() {
+			resizeEditorPreview = false;
+		});*/
+		
+		$("#top-section").mousemove(function(event) {
+			if(resizeEditorPreview && !$scope.isInPreview) {
+				$("#top-section").css("cursor", "ew-resize");
+				var percent = event.clientX/window.innerWidth;
+				
+				if(percent < 0.9 && percent > 0.1) {
+					$("#editor").css("right", (1 - percent)*100 + "%");
+					$("#preview").css("left", percent*100 + "%");
+				}
+			}
+		});
+	});
+	
+	ipcRenderer.on('save-before-close', function(event, message) {
+		if(!$scope.canSave)
+			remote.getCurrentWindow().destroy();
+		else {
+			var value = ipcRenderer.sendSync("save-before-change-dialog", "");
+			if(value == 0) {
+				$scope.save();	
+				remote.getCurrentWindow().destroy();
+			}
+			else if(value == 1)
+				remote.getCurrentWindow().destroy();
 		}
 	});
 });

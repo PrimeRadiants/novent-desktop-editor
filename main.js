@@ -103,6 +103,12 @@ function openEditor() {
 			if(newProjectWindow != null)
 				newProjectWindow.close();
 			
+			
+			mainWindow.on('close', function(event) {
+				event.preventDefault();
+				mainWindow.webContents.send("save-before-close");
+			});
+			
 			mainWindow.on('closed', function() {
 				mainWindow = null;
 			});
@@ -113,6 +119,12 @@ function openEditor() {
 	});
 	
 }
+
+ipcMain.on('save-before-change-dialog', function(event, arg) {
+	dialog.showMessageBox({type: "warning", buttons: ["Yes", "No", "Cancel"], title: "Novent Studio", message: "Save changes made to project before quiting ?"}, function(value) {
+		event.returnValue = value;
+	});
+});
 
 function openExistingProject(path) {
 	if(fs.existsSync(path)) {
