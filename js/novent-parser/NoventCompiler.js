@@ -1,11 +1,6 @@
 'use strict';
 const Novent = require("./Novent.js");
-const Animate = require("./Animate.js");
-const End = require("./End.js");
-const Play = require("./Play.js");
-const Stop = require("./Stop.js");
-const Wait = require("./Wait.js");
-const Wiggle = require("./Wiggle.js");
+const EventLibrary = require("./EventLibrary.js");
 
 var NoventCompiler = new Object();
 
@@ -31,17 +26,17 @@ NoventCompiler.compile = function(novent, startPageIndex) {
 function eventToJavascript(eventElements) {
 	var result = "";
 	eventElements.forEach(function(element) {
-		if(element instanceof Animate)
+		if(element instanceof EventLibrary.Animate)
 			result += animateToJavascript(element);
-		else if(element instanceof End)
+		else if(element instanceof EventLibrary.End)
 			result += endToJavascript(element);
-		else if(element instanceof Play)
+		else if(element instanceof EventLibrary.Play)
 			result += playToJavascript(element);
-		else if(element instanceof Stop)
+		else if(element instanceof EventLibrary.Stop)
 			result += stopToJavascript(element);
-		else if(element instanceof Wait)
+		else if(element instanceof EventLibrary.Wait)
 			result += waitToJavascript(element);
-		else if(element instanceof Wiggle)
+		else if(element instanceof EventLibrary.Wiggle)
 			result += wiggleToJavascript(element);
 	});
 	return result;

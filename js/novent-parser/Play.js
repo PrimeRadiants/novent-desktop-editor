@@ -43,6 +43,10 @@ Play.fromNode = function(node, projectPath, materialNames, errors) {
 }
 
 var getChildEvent = function(node, projectPath, materialNames, errors) {
+	console.log(Animate);
+	console.log(End);
+	console.log(Wait);
+	console.log(Stop);
 	var result;
 	if(node.nodeName == "end") {
 		result = End.fromNode(node, projectPath, errors);
