@@ -36,7 +36,6 @@ app.controller('editorController', function($scope, $interval) {
 			message: message
 		  });
 		}
-		console.log(found);
 		return found;
 	});
 	
@@ -146,7 +145,6 @@ app.controller('editorController', function($scope, $interval) {
 	}
 	
 	$scope.save = function() {
-		console.log("test");
 		fs.writeFileSync($scope.projectPath + "/novent-descriptor.xml", $scope.editor.getValue());
 			
 		$scope.canSave = false;
