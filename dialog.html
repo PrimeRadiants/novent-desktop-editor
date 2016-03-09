@@ -12,25 +12,9 @@
 	<section id="recent-projects">
 		<h3>Recent Projects</h3>
 		<div class="projects">
-			<div class="project">
+			<div class="project" ng-repeat="p in recentProjects | reverse | limitTo:5 " ng-click="openRecentProject(p)">
 				<span class="project-icon"></span>
-				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
-			</div>
-			<div class="project">
-				<span class="project-icon"></span>
-				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
-			</div>
-			<div class="project">
-				<span class="project-icon"></span>
-				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
-			</div>
-			<div class="project">
-				<span class="project-icon"></span>
-				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
-			</div>
-			<div class="project">
-				<span class="project-icon"></span>
-				<a class="project-link">C:\User\Shanira\Novent Demo\Novent Demo.noventproj</a>
+				<a class="project-link">{{p}}</a>
 			</div>
 		</div>
 	</section>

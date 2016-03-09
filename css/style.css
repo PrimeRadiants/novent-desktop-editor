@@ -221,4 +221,7 @@ body {
 	right: 0px;
 	left: 0px;
 	background: #17232a;
+	line-height: 22px;
+    padding: 0 10px;
+    font-family: monospace;
 }

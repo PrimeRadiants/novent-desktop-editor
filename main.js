@@ -18,6 +18,29 @@ global.filePath = null;
 global.newProjectPath = app.getPath("documents");
 global.dirname = __dirname
 
+if(!fs.existsSync(app.getPath("documents") + "/recentNoventProjects.json")) {
+	fs.writeFileSync(app.getPath("documents") + "/recentNoventProjects.json", "[]");
+	global.recentProjects = [];
+}
+else {
+	global.recentProjects = JSON.parse(fs.readFileSync(app.getPath("documents") + "/recentNoventProjects.json"));
+	global.recentProjects.forEach(function(e, i) {
+		if(!fs.existsSync(e))
+			global.recentProjects.splice(i, 1);
+	});
+}
+
+function updateReventProjects(newProjectPath) {
+	if(global.recentProjects.indexOf(newProjectPath) != -1)
+		global.recentProjects.splice(global.recentProjects.indexOf(newProjectPath), 1);
+	else if(global.recentProjects.length == 20)
+		global.recentProjects.splice(0, 1);
+	
+	global.recentProjects.push(newProjectPath);
+	
+	fs.writeFileSync(app.getPath("documents") + "/recentNoventProjects.json", JSON.stringify(global.recentProjects));
+}
+
 function main() {
 	if(global.filePath != null && path.extname(process.argv[1]) == ".noventproj")
 	 global.filePath = process.argv[1];
@@ -44,7 +67,11 @@ ipcMain.on('dialog-close', function(event, arg) {
 });
 
 ipcMain.on('dialog-open-existing-project', function(event, arg) {
-  openExistingProject();
+  openExistingProjectDialog();
+});
+
+ipcMain.on('open-existing-project', function(event, arg) {
+  openExistingProject(arg);
 });
 
 ipcMain.on('dialog-create-new-project', function(event, arg) {
@@ -87,7 +114,18 @@ function openEditor() {
 	
 }
 
-function openExistingProject() {
+function openExistingProject(path) {
+	if(fs.existsSync(path)) {
+		global.filePath = path;
+		updateReventProjects(global.filePath);
+		openEditor();
+	}
+	else {
+		dialog.showErrorBox("Novent project error", "Missing Project " + path);
+	}
+}
+
+function openExistingProjectDialog() {
 	dialog.showOpenDialog({properties: ['openFile'], filters: [{ name: 'Novent Project', extensions: ['noventproj'] }]}, function(filePaths) {
 
 		//If no file selected, quit
@@ -97,6 +135,7 @@ function openExistingProject() {
 
 		//Resolve file name without extension
 		global.filePath = filePaths[0];
+		updateReventProjects(global.filePath);
 		openEditor();
 	});
 }
@@ -161,7 +200,8 @@ function createNewProject(projectName, projectPath) {
 							dialog.showErrorBox("Novent project error", JSON.stringify(err4));
 							return;  
 						  }
-						  global.filePath = projectPath + "/" + projectName + "/" + projectName + '.noventproj';
+						  global.filePath = projectPath + "\\" + projectName + "\\" + projectName + '.noventproj';
+						  updateReventProjects(global.filePath);
 						  openEditor();
 					  });
 				  });

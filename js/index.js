@@ -12,6 +12,7 @@ const asar = require('asar');
 
 app.controller('editorController', function($scope, $interval) {
 	
+	$scope.projectPath = path.dirname(remote.getGlobal('filePath'));
 	
 	CodeMirror.registerHelper("lint", "xml", function(text, options) {
 		var found = [];
@@ -19,7 +20,7 @@ app.controller('editorController', function($scope, $interval) {
 			return found;
 		
 		$scope.$apply(function () {
-			$scope.novent = NoventParser.parse(text, path.dirname(remote.getGlobal('filePath')));
+			$scope.novent = NoventParser.parse(text, $scope.projectPath);
 		});
 		
 		for (var i = 0; i < $scope.novent.errors.length; i++) {
@@ -81,7 +82,7 @@ app.controller('editorController', function($scope, $interval) {
 	
 	editor = $scope.editor;
 	
-	fs.readFile(path.dirname(remote.getGlobal('filePath')) + "/novent-descriptor.xml", 'utf8', (err, data) => {
+	fs.readFile($scope.projectPath + "/novent-descriptor.xml", 'utf8', (err, data) => {
 	  if (err) {
 		ipcRenderer.send('project-error', err); 
 		return;
@@ -93,7 +94,8 @@ app.controller('editorController', function($scope, $interval) {
 
 	});
 	
-	$scope.previewURI = path.dirname(remote.getGlobal('filePath')) + "/novent.html";
+	
+	$scope.previewURI = $scope.projectPath + "/novent.html";
 	
 	$scope.preview = function() {
 		if(!$scope.isInPreview) {
@@ -101,7 +103,7 @@ app.controller('editorController', function($scope, $interval) {
 				ensureCompileFiles();
 				
 				var script = NoventCompiler.compile($scope.novent, $scope.pageSelect);
-				fs.writeFile(path.dirname(remote.getGlobal('filePath')) + "/novent.js", script, (err) => {
+				fs.writeFile($scope.projectPath + "/novent.js", script, (err) => {
 					if (err) {
 						console.log(err);
 						return;  
@@ -121,16 +123,16 @@ app.controller('editorController', function($scope, $interval) {
 	}
 	
 	function ensureCompileFiles() {
-		if(!fs.existsSync(path.dirname(remote.getGlobal('filePath')) + "/novent.html")) {
-			fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent.html", path.dirname(remote.getGlobal('filePath')) + "/novent.html");
+		if(!fs.existsSync($scope.projectPath + "/novent.html")) {
+			fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent.html",$scope.projectPath + "/novent.html");
 		}
 		
-		if(!fs.existsSync(path.dirname(remote.getGlobal('filePath')) + "/canvasengine-1.3.2.all.js")) {
-			fs.copySync(remote.getGlobal('dirname') + "/project-resources/canvasengine-1.3.2.all.js", path.dirname(remote.getGlobal('filePath')) + "/canvasengine-1.3.2.all.js");
+		if(!fs.existsSync($scope.projectPath + "/canvasengine-1.3.2.all.js")) {
+			fs.copySync(remote.getGlobal('dirname') + "/project-resources/canvasengine-1.3.2.all.js", $scope.projectPath + "/canvasengine-1.3.2.all.js");
 		}
 		
-		if(!fs.existsSync(path.dirname(remote.getGlobal('filePath')) + "/novent-reader.js")) {
-			fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent-reader.js", path.dirname(remote.getGlobal('filePath')) + "/novent-reader.js");
+		if(!fs.existsSync($scope.projectPath + "/novent-reader.js")) {
+			fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent-reader.js", $scope.projectPath + "/novent-reader.js");
 		}
 	}
 	
@@ -144,7 +146,7 @@ app.controller('editorController', function($scope, $interval) {
 	
 	$scope.save = function() {
 		console.log("test");
-		fs.writeFile(path.dirname(remote.getGlobal('filePath')) + "/novent-descriptor.xml", $scope.editor.getValue(), (err) => {
+		fs.writeFile($scope.projectPath + "/novent-descriptor.xml", $scope.editor.getValue(), (err) => {
 			if (err) {
 				console.log(err);
 				return;  
@@ -163,13 +165,13 @@ app.controller('editorController', function($scope, $interval) {
 				ensureCompileFiles();
 				
 				var script = NoventCompiler.compile($scope.novent);
-				fs.writeFile(path.dirname(remote.getGlobal('filePath')) + "/novent.js", script, (err) => {
+				fs.writeFile($scope.projectPath + "/novent.js", script, (err) => {
 					if (err) {
 						console.log(err);
 						return;  
 					}
 					
-					asar.createPackage(path.dirname(remote.getGlobal('filePath')), packagePath + "\\" + path.basename(path.dirname(remote.getGlobal('filePath'))) + ".novent", function() {});
+					asar.createPackage($scope.projectPath, packagePath + "\\" + path.basename($scope.projectPath) + ".novent", function() {});
 				});
 			}
 		}
