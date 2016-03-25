@@ -41,7 +41,6 @@ app.controller('editorController', function($scope, $interval) {
 			//- existing target for animate, play & stop tags
 			//- animate value attr (positive integer etc.)
 
-			
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
 			});
@@ -87,7 +86,17 @@ app.controller('editorController', function($scope, $interval) {
 	$scope.editor.setOption("theme", "night");
 	
 	$scope.editor.on("change", function() {
-		$scope.canSave = true;
+		if($scope.editor.getValue() != $scope.savedContent)  {
+			$scope.safeApply(function () {
+				$scope.canSave = true;
+			});
+		}
+		else {
+			$scope.safeApply(function () {
+				$scope.canSave = false;
+			});
+		}
+		console.log($scope.canSave);
 	});
 	
 	$scope.fontSize = 13;
@@ -115,6 +124,7 @@ app.controller('editorController', function($scope, $interval) {
 	  }
 	  $scope.safeApply(function () {
 		  $scope.editor.setValue(data);	
+		  $scope.savedContent = data;
 		  $scope.canSave = false;
 	  });
 
@@ -172,7 +182,8 @@ app.controller('editorController', function($scope, $interval) {
 	
 	$scope.save = function() {
 		fs.writeFileSync($scope.projectPath + "/novent-descriptor.xml", $scope.editor.getValue());
-			
+		
+		$scope.savedContent = $scope.editor.getValue();
 		$scope.canSave = false;
 	}
 	
