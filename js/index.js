@@ -3,8 +3,7 @@ const ipcRenderer = require('electron').ipcRenderer;
 const remote = require('remote');
 const path = require('path');
 const fs = require('fs-extra');
-const NoventParser = require("./js/novent-parser/NoventParser.js");
-const NoventCompiler = require("./js/novent-parser/NoventCompiler.js");
+const NoventCompiler = require("./js/NoventCompiler.js");
 const asar = require('asar');
 const libxml = require("libxmljs");
 const xml2js = require('xml2js');
@@ -43,6 +42,11 @@ app.controller('editorController', function($scope, $interval) {
 
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
+				
+				xml2js.parseString(text, function (err, result) {
+					$scope.novent = result.novent;
+					console.log($scope.novent);
+				});
 			});
 			
 			for (var i = 0; i < xmlDoc.validationErrors.length; i++) {
@@ -60,6 +64,14 @@ app.controller('editorController', function($scope, $interval) {
 			return found;
 		}
 		catch(e) {
+			$scope.safeApply(function () {
+				$scope.noventErrors = [{line: 0, column: 0, message: "Invalid XML structure"}];
+			});
+			found.push({
+				from: CodeMirror.Pos(0, 0),
+				to: CodeMirror.Pos(0, 0),
+				message: "Invalid XML structure"
+			  });
 			return found;
 		}
 	});
@@ -96,7 +108,6 @@ app.controller('editorController', function($scope, $interval) {
 				$scope.canSave = false;
 			});
 		}
-		console.log($scope.canSave);
 	});
 	
 	$scope.fontSize = 13;
@@ -135,7 +146,7 @@ app.controller('editorController', function($scope, $interval) {
 	
 	$scope.preview = function() {
 		if(!$scope.isInPreview) {
-			if($scope.novent.errors.length == 0) {
+			if($scope.noventErrors.length == 0) {
 				ensureCompileFiles();
 				
 				var script = NoventCompiler.compile($scope.novent, $scope.pageSelect);
@@ -159,17 +170,9 @@ app.controller('editorController', function($scope, $interval) {
 	}
 	
 	function ensureCompileFiles() {
-		if(!fs.existsSync($scope.projectPath + "/novent.html")) {
-			fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent.html",$scope.projectPath + "/novent.html");
-		}
-		
-		if(!fs.existsSync($scope.projectPath + "/canvasengine-1.3.2.all.js")) {
-			fs.copySync(remote.getGlobal('dirname') + "/project-resources/canvasengine-1.3.2.all.js", $scope.projectPath + "/canvasengine-1.3.2.all.js");
-		}
-		
-		if(!fs.existsSync($scope.projectPath + "/novent-reader.js")) {
-			fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent-reader.js", $scope.projectPath + "/novent-reader.js");
-		}
+		fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent.html",$scope.projectPath + "/novent.html");
+		fs.copySync(remote.getGlobal('dirname') + "/project-resources/createjs-2015.11.26.min.js", $scope.projectPath + "/createjs-2015.11.26.min.js");
+		fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent-engine-0.1.js", $scope.projectPath + "/novent-engine-0.1.js");
 	}
 	
 	$scope.new = function() {
@@ -188,7 +191,7 @@ app.controller('editorController', function($scope, $interval) {
 	}
 	
 	$scope.package = function() {
-		if($scope.novent.errors.length == 0) {
+		if($scope.noventErrors.length == 0) {
 			var packagePath = ipcRenderer.sendSync('package-project', '');
 			if(packagePath != null) {
 				ensureCompileFiles();

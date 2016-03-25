@@ -41,7 +41,7 @@
 			<i class="fa fa-file-o" ng-click="new()"></i>
 			<i class="fa fa-folder-o" ng-click="open()"></i>
 			<i class="fa fa-floppy-o" ng-click="save()" ng-class="{'disabled': !canSave}"></i>
-			<i class="package-icon" ng-click="package()" ng-class="{'disabled': novent.errors.length != 0}"></i>
+			<i class="package-icon" ng-click="package()" ng-class="{'disabled': noventErrors.length != 0}"></i>
 		</span>
 		<span>
 			<i class="fa fa-scissors" ng-click="cut()"></i>
@@ -66,7 +66,7 @@
 		<div id="preview">
 			<div class="resize-col resize-left resize-editor-preview"></div>
 			<div class="preview-action">
-				<button class="preview-play" ng-class="{'disabled': novent.errors.length != 0, 'active': isInPreview}" ng-click="preview()"><i class="fa fa-play"></i></button>
+				<button class="preview-play" ng-class="{'disabled': noventErrors.length != 0, 'active': isInPreview}" ng-click="preview()"><i class="fa fa-play"></i></button>
 				<select id="pageSelect" name="pageSelect" ng-model="pageSelect">
 				  <option ng-repeat="page in novent.pages" value="{{$index}}">{{page.name}}</option>
 				</select>
