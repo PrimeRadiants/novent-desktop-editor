@@ -1,176 +1,252 @@
-var childEvents = ["end", "animate", "play", "wait", "wiggle", "stop"];
-var easeValues = [
-	"easeInQuad",
-	"easeOutQuad",
-	"easeInCubic",
-	"easeOutCubic",
-	"easeInOutCubic",
-	"easeInQuart",
-	"easeOutQuart",
-	"easeInOutQuart",
-	"easeInQuint",
-	"easeOutQuint",
-	"easeInOutQuint",
-	"easeInSine",
-	"easeOutSine",
-	"easeInOutSine",
-	"easeInExpo",
-	"easeOutExpo",
-	"easeInOutExpo",
-	"easeInCirc",
-	"easeOutCirc",
-	"easeInOutCirc",
-	"easeInElastic",
-	"easeOutElastic",
-	"easeInOutElastic",
-	"easeInBack",
-	"easeOutBack",
-	"easeInOutBack",
-	"easeInBounce",
-	"easeOutBounce",
-	"easeInOutBounce"
-];
-
-var loopValues = ["loop", "stop", "remove"];
-
 var noventTags = {
-	"!top": ["novent"],
-	novent: {
-	  children: ["button", "page"]
-	},
-	button: {
-	  attrs: {
-		src: null,
-		x: null,
-		y: null,
-		width: null,
-		height: null
-	  },
-	  children: []
-	},
-	page: {
-	  attrs: {name: null},
-	  children: ["materials", "events"]
-	},
-	materials: {
-		children: ["animation", "font", "image", "sound", "video", "text"]
-	},
-	events: {
-		children: ["event"]
-	},
-	animation: {
-		attrs: {
-			name: null,
-			src: null,
-			x: null,
-			y: null,
-			width: null,
-			height: null,
-			frames: null,
-			frequency: null,
-			opacity: null
-		},
-		children: []
-	},
-	font: {
-		attrs: {
-			name: null,
-			src: null
-		},
-		children: []
-	},
-	image: {
-		attrs: {
-			name: null,
-			src: null,
-			x: null,
-			y: null,
-			width: null,
-			height: null,
-			opacity: null
-		},
-		children: []
-	},
-	sound: {
-		attrs: {
-			name: null,
-			src: null,
-			volume: null
-		},
-		children: []
-	},
-	video: {
-		attrs: {
-			name: null,
-			src: null,
-			x: null,
-			y: null,
-			width: null,
-			height: null,
-			opacity: null
-		},
-		children: []
-	},
-	text: {
-		attrs: {
-			name: null,
-			x: null,
-			y: null,
-			width: null,
-			align: ["left", "center", "right", "justify"],
-			lineHeight: null,
-			font: null,
-			size: null,
-			opacity: null
-		},
-		children: []
-	},
-	event: {
-		children: childEvents
-	},
-	end: {
-		children: []
-	},
-	animate: {
-		children: childEvents,
-		attrs: {
-			target: null,
-			property: null,
-			value: null,
-			duration: null,
-			ease: easeValues
-		}
-	},
-	play: {
-		children: childEvents,
-		attrs: {
-			target: null,
-			loop: loopValues
-		}
-	},
-	wait: {
-		children: childEvents,
-		attrs: {
-			duration: null
-		}
-	},
-	wiggle: {
-		attrs: {
-			name: null,
-			target: null,
-			property: null,
-			amplitude: null,
-			frequency: null,
-			ease: easeValues
-		},
-		children: []
-	},
-	stop: {
-		attrs: {
-			target: null
-		},
-		children: []
-	}
+  "!top": [
+    "novent"
+  ],
+  "novent": {
+    "attrs": {
+      "height": null,
+      "width": null
+    },
+    "children": [
+      "button",
+      "page"
+    ]
+  },
+  "button": {
+    "attrs": {
+      "src": null,
+      "alpha": null,
+      "regX": null,
+      "regY": null,
+      "rotation": null,
+      "scaleX": null,
+      "scaleY": null,
+      "skewX": null,
+      "skewY": null,
+      "visible": null,
+      "x": null,
+      "y": null
+    }
+  },
+  "page": {
+    "attrs": {
+      "name": null
+    },
+    "children": [
+      "materials",
+      "event"
+    ]
+  },
+  "materials": {
+    "children": [
+      "image",
+      "animation",
+      "video",
+      "sound",
+      "text"
+    ]
+  },
+  "image": {
+    "attrs": {
+      "name": null,
+      "src": null,
+      "alpha": null,
+      "regX": null,
+      "regY": null,
+      "rotation": null,
+      "scaleX": null,
+      "scaleY": null,
+      "skewX": null,
+      "skewY": null,
+      "visible": null,
+      "x": null,
+      "y": null
+    }
+  },
+  "animation": {
+    "attrs": {
+      "name": null,
+      "src": null,
+      "height": null,
+      "width": null,
+      "frames": null,
+      "framerate": null,
+      "alpha": null,
+      "regX": null,
+      "regY": null,
+      "rotation": null,
+      "scaleX": null,
+      "scaleY": null,
+      "skewX": null,
+      "skewY": null,
+      "visible": null,
+      "x": null,
+      "y": null
+    }
+  },
+  "video": {
+    "attrs": {
+      "name": null,
+      "src": null,
+      "alpha": null,
+      "regX": null,
+      "regY": null,
+      "rotation": null,
+      "scaleX": null,
+      "scaleY": null,
+      "skewX": null,
+      "skewY": null,
+      "visible": null,
+      "x": null,
+      "y": null
+    }
+  },
+  "sound": {
+    "attrs": {
+      "name": null,
+      "src": null,
+      "volume": null
+    }
+  },
+  "text": {
+    "attrs": {
+      "name": null,
+      "font": null,
+      "size": null,
+      "width": null,
+      "align": [
+        "left",
+        "center",
+        "right",
+        "justify"
+      ],
+      "lineHeight": null,
+      "color": null,
+      "alpha": null,
+      "regX": null,
+      "regY": null,
+      "rotation": null,
+      "scaleX": null,
+      "scaleY": null,
+      "skewX": null,
+      "skewY": null,
+      "visible": null,
+      "x": null,
+      "y": null
+    }
+  },
+  "event": {
+    "children": [
+      "end",
+      "animate",
+      "play",
+      "wait",
+      "stop"
+    ]
+  },
+  "end": {},
+  "animate": {
+    "attrs": {
+      "name": null,
+      "target": null,
+      "property": [
+        "volume",
+        "alpha",
+        "regX",
+        "regY",
+        "rotation",
+        "scaleX",
+        "scaleY",
+        "skewX",
+        "skewY",
+        "x",
+        "y"
+      ],
+      "value": null,
+      "duration": null,
+      "ease": [
+        "backIn",
+        "backInOut",
+        "backOut",
+        "bounceIn",
+        "bounceInOut",
+        "bounceOut",
+        "circIn",
+        "circInOut",
+        "circOut",
+        "cubicIn",
+        "cubicInOut",
+        "cubicOut",
+        "elasticIn",
+        "elasticInOut",
+        "elasticOut",
+        "linear",
+        "quadIn",
+        "quadInOut",
+        "quadOut",
+        "quartIn",
+        "quartInOut",
+        "quartOut",
+        "quintIn",
+        "quintInOut",
+        "quintOut",
+        "sineIn",
+        "sineInOut",
+        "sineOut"
+      ],
+      "loop": null,
+      "wiggle": null
+    },
+    "children": [
+      "end",
+      "animate",
+      "play",
+      "wait",
+      "stop"
+    ]
+  },
+  "play": {
+    "attrs": {
+      "target": null,
+      "loop": [
+        "loop",
+        "stop",
+        "remove"
+      ]
+    },
+    "children": [
+      "end",
+      "animate",
+      "play",
+      "wait",
+      "stop"
+    ]
+  },
+  "wait": {
+    "attrs": {
+      "duration": null
+    },
+    "children": [
+      "end",
+      "animate",
+      "play",
+      "wait",
+      "stop"
+    ]
+  },
+  "stop": {
+    "attrs": {
+      "target": null,
+      "wait": null
+    },
+    "children": [
+      "end",
+      "animate",
+      "play",
+      "wait",
+      "stop"
+    ]
+  }
 };
 
 function completeAfter(cm, pred) {
