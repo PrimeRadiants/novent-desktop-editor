@@ -4,7 +4,7 @@
   "description": "A Novent Desktop Reader based on Electron",
   "main": "main.js",
   "scripts": {
-	"postinstall": "cd node_modules/libxmljs && node-gyp rebuild --target=0.36.10 --arch=x64 --dist-url=https://atom.io/download/atom-shell",
+    "postinstall": "cd node_modules/libxmljs && node-gyp rebuild --target=0.36.10 --arch=x64 --dist-url=https://atom.io/download/atom-shell",
     "start": "electron main.js"
   },
   "repository": {
@@ -25,6 +25,9 @@
     "electron-prebuilt": "^0.36.10"
   },
   "dependencies": {
-    "fs-extra": "^0.26.5"
+    "asar": "^0.10.0",
+    "fs-extra": "^0.26.5",
+    "libxmljs": "^0.17.1",
+    "xml2js": "^0.4.16"
   }
 }
