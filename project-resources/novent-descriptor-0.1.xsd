@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="novent">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="button" minOccurs="1" maxOccurs="1">
+					<xsd:complexType>
+						<xsd:attribute name="src" use="required">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:anyURI">
+									<xsd:pattern value=".+\.(png|jpg|gif)" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="alpha">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:decimal">
+									<xsd:minInclusive value="0" />
+									<xsd:maxInclusive value="1" />
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+						<xsd:attribute name="regX" type="xsd:integer"></xsd:attribute>
+						<xsd:attribute name="regY" type="xsd:integer"></xsd:attribute>
+						<xsd:attribute name="rotation" type="xsd:decimal"></xsd:attribute>
+						<xsd:attribute name="scaleX" type="xsd:decimal"></xsd:attribute>
+						<xsd:attribute name="scaleY" type="xsd:decimal"></xsd:attribute>
+						<xsd:attribute name="skewX" type="xsd:decimal"></xsd:attribute>
+						<xsd:attribute name="skewY" type="xsd:decimal"></xsd:attribute>
+						<xsd:attribute name="visible" type="xsd:boolean"></xsd:attribute>
+						<xsd:attribute name="x" type="xsd:integer"></xsd:attribute>
+						<xsd:attribute name="y" type="xsd:integer"></xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="page" minOccurs="1" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="materials" minOccurs="1" maxOccurs="1">
+								<xsd:complexType>
+									<xsd:choice maxOccurs="unbounded">
+									   <xsd:element name="image" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+												<xsd:attribute name="src" use="required">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:anyURI">
+															<xsd:pattern value=".+\.(png|jpg|gif)" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="alpha">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:decimal">
+															<xsd:minInclusive value="0" />
+															<xsd:maxInclusive value="1" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="regX" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="regY" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="rotation" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="scaleX" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="scaleY" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="skewX" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="skewY" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="visible" type="xsd:boolean"></xsd:attribute>
+												<xsd:attribute name="x" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="y" type="xsd:integer"></xsd:attribute>
+											</xsd:complexType>
+									   </xsd:element>
+									   <xsd:element name="animation" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+												<xsd:attribute name="src" use="required">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:anyURI">
+															<xsd:pattern value=".+\.(png|jpg)" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="height" use="required" type="xsd:positiveInteger"></xsd:attribute>
+												<xsd:attribute name="width" use="required" type="xsd:positiveInteger"></xsd:attribute>
+												<xsd:attribute name="frames" use="required" type="xsd:positiveInteger"></xsd:attribute>
+												<xsd:attribute name="framerate">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:integer">
+															<xsd:minInclusive value="1" />
+															<xsd:maxInclusive value="30" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="alpha">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:decimal">
+															<xsd:minInclusive value="0" />
+															<xsd:maxInclusive value="1" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="regX" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="regY" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="rotation" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="scaleX" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="scaleY" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="skewX" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="skewY" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="visible" type="xsd:boolean"></xsd:attribute>
+												<xsd:attribute name="x" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="y" type="xsd:integer"></xsd:attribute>
+											</xsd:complexType>
+									   </xsd:element>
+									   <xsd:element name="video" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+												<xsd:attribute name="src" use="required">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:anyURI">
+															<xsd:pattern value=".+\.(mp4)" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="alpha">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:decimal">
+															<xsd:minInclusive value="0" />
+															<xsd:maxInclusive value="1" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="regX" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="regY" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="rotation" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="scaleX" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="scaleY" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="skewX" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="skewY" type="xsd:decimal"></xsd:attribute>
+												<xsd:attribute name="visible" type="xsd:boolean"></xsd:attribute>
+												<xsd:attribute name="x" type="xsd:integer"></xsd:attribute>
+												<xsd:attribute name="y" type="xsd:integer"></xsd:attribute>
+											</xsd:complexType>
+									   </xsd:element>
+									   <xsd:element name="sound" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+												<xsd:attribute name="src" use="required">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:anyURI">
+															<xsd:pattern value=".+\.(mp3)" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+												<xsd:attribute name="volume">
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:decimal">
+															<xsd:minInclusive value="0" />
+															<xsd:maxInclusive value="1" />
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:attribute>
+											</xsd:complexType>
+									   </xsd:element>
+									   <xsd:element name="text" maxOccurs="unbounded" type="unemptyNoventText"></xsd:element>
+									</xsd:choice>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:element name="event" minOccurs="1" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:choice maxOccurs="unbounded">
+										<xsd:element name="end" maxOccurs="1"></xsd:element>
+										<xsd:element name="animate" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:complexContent>
+													<xsd:extension base="recursiveEvent">
+														<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+														<xsd:attribute name="target" use="required" type="xsd:string"></xsd:attribute>
+														<xsd:attribute name="property" use="required">
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:enumeration value="volume"/>
+																	<xsd:enumeration value="alpha"/>
+																	<xsd:enumeration value="regX"/>
+																	<xsd:enumeration value="regY"/>
+																	<xsd:enumeration value="rotation"/>
+																	<xsd:enumeration value="scaleX"/>
+																	<xsd:enumeration value="scaleY"/>
+																	<xsd:enumeration value="skewX"/>
+																	<xsd:enumeration value="skewY"/>
+																	<xsd:enumeration value="x"/>
+																	<xsd:enumeration value="y"/>
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:attribute>
+														<xsd:attribute name="value" use="required" type="xsd:decimal"></xsd:attribute>
+														<xsd:attribute name="duration" use="required" type="xsd:positiveInteger"></xsd:attribute>
+														<xsd:attribute name="ease">
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:enumeration value="backIn"/>
+																	<xsd:enumeration value="backInOut"/>
+																	<xsd:enumeration value="backOut"/>
+																	<xsd:enumeration value="bounceIn"/>
+																	<xsd:enumeration value="bounceInOut"/>
+																	<xsd:enumeration value="bounceOut"/>
+																	<xsd:enumeration value="circIn"/>
+																	<xsd:enumeration value="circInOut"/>
+																	<xsd:enumeration value="circOut"/>
+																	<xsd:enumeration value="cubicIn"/>
+																	<xsd:enumeration value="cubicInOut"/>
+																	<xsd:enumeration value="cubicOut"/>
+																	<xsd:enumeration value="elasticIn"/>
+																	<xsd:enumeration value="elasticInOut"/>
+																	<xsd:enumeration value="elasticOut"/>
+																	<xsd:enumeration value="linear"/>
+																	<xsd:enumeration value="quadIn"/>
+																	<xsd:enumeration value="quadInOut"/>
+																	<xsd:enumeration value="quadOut"/>
+																	<xsd:enumeration value="quartIn"/>
+																	<xsd:enumeration value="quartInOut"/>
+																	<xsd:enumeration value="quartOut"/>
+																	<xsd:enumeration value="quintIn"/>
+																	<xsd:enumeration value="quintInOut"/>
+																	<xsd:enumeration value="quintOut"/>
+																	<xsd:enumeration value="sineIn"/>
+																	<xsd:enumeration value="sineInOut"/>
+																	<xsd:enumeration value="sineOut"/>
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:attribute>
+														<xsd:attribute name="loop" type="xsd:boolean"></xsd:attribute>
+														<xsd:attribute name="wiggle" type="xsd:boolean"></xsd:attribute>
+													</xsd:extension>
+												</xsd:complexContent>
+											</xsd:complexType>
+											
+										</xsd:element>
+										<xsd:element name="play" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:complexContent>
+													<xsd:extension base="recursiveEvent">
+														<xsd:attribute name="target" use="required" type="xsd:string"></xsd:attribute>
+														<xsd:attribute name="loop">
+															<xsd:simpleType>
+																<xsd:restriction base="xsd:string">
+																	<xsd:enumeration value="loop"/>
+																	<xsd:enumeration value="stop"/>
+																	<xsd:enumeration value="remove"/>
+																</xsd:restriction>
+															</xsd:simpleType>
+														</xsd:attribute>
+													</xsd:extension>
+												</xsd:complexContent>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element name="wait" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:complexContent>
+													<xsd:extension base="recursiveEvent">
+														<xsd:attribute name="duration" use="required" type="xsd:positiveInteger"></xsd:attribute>
+													</xsd:extension>
+												</xsd:complexContent>
+											</xsd:complexType>
+										</xsd:element>
+										<xsd:element name="stop" maxOccurs="unbounded">
+											<xsd:complexType>
+												<xsd:complexContent>
+													<xsd:extension base="recursiveEvent">
+														<xsd:attribute name="target" use="required" type="xsd:string"></xsd:attribute>
+														<xsd:attribute name="wait" type="xsd:boolean"></xsd:attribute>
+													</xsd:extension>
+												</xsd:complexContent>
+											</xsd:complexType>
+										</xsd:element>
+									</xsd:choice>
+								</xsd:complexType>
+							</xsd:element>
+						</xsd:sequence>
+						<xsd:attribute name="name" type="xsd:string" use="required"></xsd:attribute>
+					</xsd:complexType>
+					<xsd:unique name="unique-animate-name">
+					  <xsd:selector xpath=".//animate|.//image|.//animation|.//video|.//sound|.//text"/>
+					  <xsd:field xpath="@name"/>
+				   </xsd:unique>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="height" type="xsd:positiveInteger" use="required"></xsd:attribute>
+			<xsd:attribute name="width" type="xsd:positiveInteger" use="required"></xsd:attribute>
+		</xsd:complexType>
+		<xsd:unique name="unique-page-name">
+		  <xsd:selector xpath="page"/>
+		  <xsd:field xpath="@name"/>
+	   </xsd:unique>
+	</xsd:element>
+	<xsd:complexType name="recursiveEvent">    
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="end" maxOccurs="1"></xsd:element>
+			<xsd:element name="animate" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="recursiveEvent">
+							<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+							<xsd:attribute name="target" use="required" type="xsd:string"></xsd:attribute>
+							<xsd:attribute name="property" use="required">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="volume"/>
+										<xsd:enumeration value="alpha"/>
+										<xsd:enumeration value="regX"/>
+										<xsd:enumeration value="regY"/>
+										<xsd:enumeration value="rotation"/>
+										<xsd:enumeration value="scaleX"/>
+										<xsd:enumeration value="scaleY"/>
+										<xsd:enumeration value="skewX"/>
+										<xsd:enumeration value="skewY"/>
+										<xsd:enumeration value="x"/>
+										<xsd:enumeration value="y"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+							<xsd:attribute name="value" use="required" type="xsd:decimal"></xsd:attribute>
+							<xsd:attribute name="duration" use="required" type="xsd:positiveInteger"></xsd:attribute>
+							<xsd:attribute name="ease">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="backIn"/>
+										<xsd:enumeration value="backInOut"/>
+										<xsd:enumeration value="backOut"/>
+										<xsd:enumeration value="bounceIn"/>
+										<xsd:enumeration value="bounceInOut"/>
+										<xsd:enumeration value="bounceOut"/>
+										<xsd:enumeration value="circIn"/>
+										<xsd:enumeration value="circInOut"/>
+										<xsd:enumeration value="circOut"/>
+										<xsd:enumeration value="cubicIn"/>
+										<xsd:enumeration value="cubicInOut"/>
+										<xsd:enumeration value="cubicOut"/>
+										<xsd:enumeration value="elasticIn"/>
+										<xsd:enumeration value="elasticInOut"/>
+										<xsd:enumeration value="elasticOut"/>
+										<xsd:enumeration value="linear"/>
+										<xsd:enumeration value="quadIn"/>
+										<xsd:enumeration value="quadInOut"/>
+										<xsd:enumeration value="quadOut"/>
+										<xsd:enumeration value="quartIn"/>
+										<xsd:enumeration value="quartInOut"/>
+										<xsd:enumeration value="quartOut"/>
+										<xsd:enumeration value="quintIn"/>
+										<xsd:enumeration value="quintInOut"/>
+										<xsd:enumeration value="quintOut"/>
+										<xsd:enumeration value="sineIn"/>
+										<xsd:enumeration value="sineInOut"/>
+										<xsd:enumeration value="sineOut"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+							<xsd:attribute name="loop" type="xsd:boolean"></xsd:attribute>
+							<xsd:attribute name="wiggle" type="xsd:boolean"></xsd:attribute>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="play" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="recursiveEvent">
+							<xsd:attribute name="target" use="required" type="xsd:string"></xsd:attribute>
+							<xsd:attribute name="loop">
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:string">
+										<xsd:enumeration value="loop"/>
+										<xsd:enumeration value="stop"/>
+										<xsd:enumeration value="remove"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:attribute>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="wait" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="recursiveEvent">
+							<xsd:attribute name="duration" use="required" type="xsd:positiveInteger"></xsd:attribute>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="stop" maxOccurs="unbounded">
+				<xsd:complexType>
+					<xsd:complexContent>
+						<xsd:extension base="recursiveEvent">
+							<xsd:attribute name="target" use="required" type="xsd:string"></xsd:attribute>
+							<xsd:attribute name="wait" type="xsd:boolean"></xsd:attribute>
+						</xsd:extension>
+					</xsd:complexContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="unemptyNoventText">
+        <xsd:simpleContent>
+            <xsd:restriction base="noventText">
+                <xsd:minLength value="1"/>
+            </xsd:restriction>
+        </xsd:simpleContent>
+    </xsd:complexType>
+	<xsd:complexType name="noventText">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="name" use="required" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="font" use="required" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="size" use="required">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:pattern value="[0-9]+(px|em|pt)" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+				<xsd:attribute name="width" use="required" type="xsd:positiveInteger"></xsd:attribute>
+				<xsd:attribute name="align">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:string">
+							<xsd:enumeration value="left"/>
+							<xsd:enumeration value="center"/>
+							<xsd:enumeration value="right"/>
+							<xsd:enumeration value="justify"/>
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+				<xsd:attribute name="lineHeight" type="xsd:positiveInteger"></xsd:attribute>
+				<xsd:attribute name="color" type="xsd:string"></xsd:attribute>
+				<xsd:attribute name="alpha">
+					<xsd:simpleType>
+						<xsd:restriction base="xsd:decimal">
+							<xsd:minInclusive value="0" />
+							<xsd:maxInclusive value="1" />
+						</xsd:restriction>
+					</xsd:simpleType>
+				</xsd:attribute>
+				<xsd:attribute name="regX" type="xsd:integer"></xsd:attribute>
+				<xsd:attribute name="regY" type="xsd:integer"></xsd:attribute>
+				<xsd:attribute name="rotation" type="xsd:decimal"></xsd:attribute>
+				<xsd:attribute name="scaleX" type="xsd:decimal"></xsd:attribute>
+				<xsd:attribute name="scaleY" type="xsd:decimal"></xsd:attribute>
+				<xsd:attribute name="skewX" type="xsd:decimal"></xsd:attribute>
+				<xsd:attribute name="skewY" type="xsd:decimal"></xsd:attribute>
+				<xsd:attribute name="visible" type="xsd:boolean"></xsd:attribute>
+				<xsd:attribute name="x" type="xsd:integer"></xsd:attribute>
+				<xsd:attribute name="y" type="xsd:integer"></xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+</xsd:schema>

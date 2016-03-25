@@ -1,17 +1,27 @@
-var app = angular.module('app', ['AxelSoft']);
+var app = angular.module('app', []);
 const ipcRenderer = require('electron').ipcRenderer;
-const shell = require('electron').shell;
 const remote = require('remote');
 const path = require('path');
 const fs = require('fs-extra');
-const dirTree = require('directory-tree');
 const NoventParser = require("./js/novent-parser/NoventParser.js");
 const NoventCompiler = require("./js/novent-parser/NoventCompiler.js");
-const XMLParser = require('xmldom').DOMParser;
 const asar = require('asar');
+const libxml = require("libxmljs");
+const xml2js = require('xml2js');
+
 window.$ = require("./js/jquery-2.2.1.min.js");
 
 app.controller('editorController', function($scope, $interval) {
+	$scope.safeApply = function(fn) {
+	  var phase = this.$root.$$phase;
+	  if(phase == '$apply' || phase == '$digest') {
+	    if(fn && (typeof(fn) === 'function')) {
+	      fn();
+	    }
+	  } else {
+	    this.$apply(fn);
+	  }
+	};
 	
 	$scope.projectPath = path.dirname(remote.getGlobal('filePath'));
 	
@@ -20,23 +30,39 @@ app.controller('editorController', function($scope, $interval) {
 		if(text == "")
 			return found;
 		
-		$scope.$apply(function () {
-			$scope.novent = NoventParser.parse(text, $scope.projectPath);
-		});
-		
-		for (var i = 0; i < $scope.novent.errors.length; i++) {
-		  var message = $scope.novent.errors[i].msg;
-		  var startLine = $scope.novent.errors[i].line;
-		  var endLine = $scope.novent.errors[i].line;
-		  var startCol = 0; 
-		  var endCol = 0;
-		  found.push({
-			from: CodeMirror.Pos(startLine - 1, startCol),
-			to: CodeMirror.Pos(endLine - 1, endCol),
-			message: message
-		  });
+		try {
+			var xsd = fs.readFileSync("project-resources/novent-descriptor-0.1.xsd", "utf8");
+			var xsdDoc = libxml.parseXml(xsd);
+			var xmlDoc = libxml.parseXml(text);
+			xmlDoc.validate(xsdDoc);
+			
+			//TODO: post validation:
+			//- 1 <end/> per event
+			//- existing target for animate, play & stop tags
+			//- animate value attr (positive integer etc.)
+
+			
+			$scope.safeApply(function () {
+				$scope.noventErrors = xmlDoc.validationErrors;
+			});
+			
+			for (var i = 0; i < xmlDoc.validationErrors.length; i++) {
+			  var message = xmlDoc.validationErrors[i].message;
+			  var startLine = xmlDoc.validationErrors[i].line;
+			  var endLine = xmlDoc.validationErrors[i].line;
+			  var startCol = xmlDoc.validationErrors[i].column; 
+			  var endCol = xmlDoc.validationErrors[i].column;
+			  found.push({
+				from: CodeMirror.Pos(startLine - 1, startCol),
+				to: CodeMirror.Pos(endLine - 1, endCol),
+				message: message
+			  });
+			}
+			return found;
 		}
-		return found;
+		catch(e) {
+			return found;
+		}
 	});
 	
 	$scope.editor = CodeMirror.fromTextArea(document.getElementById("editor-textarea"), {
@@ -87,7 +113,7 @@ app.controller('editorController', function($scope, $interval) {
 		ipcRenderer.send('project-error', err); 
 		return;
 	  }
-	  $scope.$apply(function () {
+	  $scope.safeApply(function () {
 		  $scope.editor.setValue(data);	
 		  $scope.canSave = false;
 	  });
@@ -109,7 +135,7 @@ app.controller('editorController', function($scope, $interval) {
 						return;  
 					}
 					
-					$scope.$apply(function () {
+					$scope.safeApply(function () {
 						$scope.isInPreview = true;
 						$scope.editor.setOption("readOnly", true);
 					});
@@ -186,19 +212,19 @@ app.controller('editorController', function($scope, $interval) {
 	
 	window.addEventListener('keypress', function(ev){
 		if(ev.ctrlKey && ev.keyCode == 19) {
-			$scope.$apply(function () {
+			$scope.safeApply(function () {
 				$scope.save();
 			});
 		}
 		
 		if(ev.ctrlKey && ev.keyCode == 14) {
-			$scope.$apply(function () {
+			$scope.safeApply(function () {
 				$scope.new();
 			});
 		}
 		
 		if(ev.ctrlKey && ev.keyCode == 15) {
-			$scope.$apply(function () {
+			$scope.safeApply(function () {
 				$scope.open();
 			});
 		}

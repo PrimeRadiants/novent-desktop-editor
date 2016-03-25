@@ -4,6 +4,7 @@
   "description": "A Novent Desktop Reader based on Electron",
   "main": "main.js",
   "scripts": {
+	"postinstall": "cd node_modules/libxmljs && node-gyp rebuild --target=0.36.10 --arch=x64 --dist-url=https://atom.io/download/atom-shell",
     "start": "electron main.js"
   },
   "repository": {
@@ -21,7 +22,7 @@
   },
   "homepage": "https://github.com/prime-radiants/novent-desktop-reader",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
+    "electron-prebuilt": "^0.36.10"
   },
   "dependencies": {
     "fs-extra": "^0.26.5"
