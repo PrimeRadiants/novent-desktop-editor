@@ -28,8 +28,12 @@ NoventCompiler.compile = function(novent, startPageIndex) {
 function normalizeDomObject(domObject) {
 	var result = new Object();
 	for(let prop in domObject) {
-		if(!(domObject[prop] instanceof Object))
-			result[prop] = filterFloat(domObject[prop]);
+		if(!(domObject[prop] instanceof Object)) {
+			if(prop != "_")
+				result[prop] = filterFloat(domObject[prop]);
+			else
+				result.content = domObject[prop];
+		}
 		else if(prop == "$") {
 			for(let attr in domObject[prop]) {
 				result[attr] = filterFloat(domObject[prop][attr]);

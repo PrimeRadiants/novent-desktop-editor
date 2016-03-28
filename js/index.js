@@ -41,11 +41,20 @@ app.controller('editorController', function($scope, $interval) {
 			//- animate value attr (positive integer etc.)
 			//- animate loop = true || wiggle = true, no child
 
+			function parseNumbers(value){
+				if(/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
+					  .test(value))
+					  return Number(value);
+				  return value;
+			}
+			
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
 				
-				xml2js.parseString(text, function (err, result) {
+				var parser = new xml2js.Parser({charkey:"content", mergeAttrs:true, preserveChildrenOrder:true});
+				parser.parseString(text/*, {attrValueProcessors: [parseNumbers]}*/, function (err, result) {
 					$scope.novent = result.novent;
+					console.log($scope.novent);
 				});
 			});
 			
