@@ -11,31 +11,28 @@ NoventCompiler.compile = function(novent, startPageIndex) {
 	
 	normalizedNovent.pages.forEach(function(page) {
 		script += "var page = novent.addPage(" + JSON.stringify(page) + ");";
-		
-		console.log(script)
-		
-		/*page.events.events.forEach(function(event) {
-			script += "page.Events.New(function(canvas, readyObj, callback) {" + eventToJavascript(event.elements) + "});";
-		});*/
+				
+		page.events.forEach(function(event) {
+			script += "page.addEvent(function(page, callback) {" + eventToJavascript(event) + "});";
+		});
 	});
 	
-	/*if(startPageIndex != undefined)
-		script += "novent.start(" + startPageIndex + ");";
+	if(startPageIndex != undefined)
+		script += "novent.read(" + startPageIndex + ");";
 	else
-		script += "novent.start();";*/
+		script += "novent.read();";
 	
-	console.log(script);
 	return script;
 }
 
 function normalizeDomObject(domObject) {
 	var result = new Object();
-	for(var prop in domObject) {
+	for(let prop in domObject) {
 		if(!(domObject[prop] instanceof Object))
-			result[prop] = domObject[prop];
+			result[prop] = filterFloat(domObject[prop]);
 		else if(prop == "$") {
-			for(var attr in domObject[prop]) {
-				result[attr] = domObject[prop][attr];
+			for(let attr in domObject[prop]) {
+				result[attr] = filterFloat(domObject[prop][attr]);
 			}
 		}
 		else
@@ -47,11 +44,12 @@ function normalizeDomObject(domObject) {
 
 function normalizeNoventObject(novent) {
 	var domNomalized = normalizeDomObject(novent);
+	console.log(domNomalized);
 	
 	domNomalized.button = domNomalized.button[0];
 	domNomalized.pages = new Array();
 	
-	for(var i in domNomalized.page) {
+	for(let i in domNomalized.page) {
 		domNomalized.pages[i] = domNomalized.page[i];
 		
 		domNomalized.pages[i].materials = domNomalized.pages[i].materials[0];
@@ -63,93 +61,95 @@ function normalizeNoventObject(novent) {
 		domNomalized.pages[i].materials.texts = new Array();
 		
 		if(domNomalized.pages[i].materials.image != undefined) {
-			for(var j in domNomalized.pages[i].materials.image)
-				domNomalized.pages[i].materials.images[i] = domNomalized.pages[i].materials.image[i];
+			for(let j in domNomalized.pages[i].materials.image)
+				domNomalized.pages[i].materials.images[j] = domNomalized.pages[i].materials.image[j];
 			
 			delete domNomalized.pages[i].materials.image;
 		}
 		if(domNomalized.pages[i].materials.animation != undefined) {
-			for(var j in domNomalized.pages[i].materials.animation)
-				domNomalized.pages[i].materials.animations[i] = domNomalized.pages[i].materials.animation[i];
+			for(let j in domNomalized.pages[i].materials.animation)
+				domNomalized.pages[i].materials.animations[j] = domNomalized.pages[i].materials.animation[j];
 			
 			delete domNomalized.pages[i].materials.animation;
 		}
 		if(domNomalized.pages[i].materials.video != undefined) {
-			for(var j in domNomalized.pages[i].materials.video)
-				domNomalized.pages[i].materials.videos[i] = domNomalized.pages[i].materials.video[i];
+			for(let j in domNomalized.pages[i].materials.video)
+				domNomalized.pages[i].materials.videos[j] = domNomalized.pages[i].materials.video[j];
 			
 			delete domNomalized.pages[i].materials.video;
 		}
 		if(domNomalized.pages[i].materials.sound != undefined) {
-			for(var j in domNomalized.pages[i].materials.sound)
-				domNomalized.pages[i].materials.sounds[i] = domNomalized.pages[i].materials.sound[i];
+			for(let j in domNomalized.pages[i].materials.sound)
+				domNomalized.pages[i].materials.sounds[j] = domNomalized.pages[i].materials.sound[j];
 			
 			delete domNomalized.pages[i].materials.sound;
 		}
 		if(domNomalized.pages[i].materials.text != undefined) {
-			for(var j in domNomalized.pages[i].materials.text)
-				domNomalized.pages[i].materials.texts[i] = domNomalized.pages[i].materials.text[i];
+			for(let j in domNomalized.pages[i].materials.text)
+				domNomalized.pages[i].materials.texts[j] = domNomalized.pages[i].materials.text[j];
 			
 			delete domNomalized.pages[i].materials.text;
 		}
+		
+		domNomalized.pages[i].events = new Array();
+		for(let j in domNomalized.pages[i].event)
+			domNomalized.pages[i].events.push(domNomalized.pages[i].event[j]);
+		
+		delete domNomalized.pages[i].event;
 	}
 	delete domNomalized.page;
 	
 	return domNomalized;
 } 
 
-/*function eventToJavascript(eventElements) {
+function filterFloat(value) {
+    if(/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
+      .test(value))
+      return Number(value);
+  return value;
+}
+
+function eventToJavascript(eventElements) {
 	var result = "";
-	eventElements.forEach(function(element) {
-		if(element instanceof EventLibrary.Animate)
-			result += animateToJavascript(element);
-		else if(element instanceof EventLibrary.End)
-			result += endToJavascript(element);
-		else if(element instanceof EventLibrary.Play)
-			result += playToJavascript(element);
-		else if(element instanceof EventLibrary.Stop)
-			result += stopToJavascript(element);
-		else if(element instanceof EventLibrary.Wait)
-			result += waitToJavascript(element);
-		else if(element instanceof EventLibrary.Wiggle)
-			result += wiggleToJavascript(element);
-	});
+
+	if(eventElements.animate != undefined) {
+		for(let i in eventElements.animate)
+			result += animateToJavascript(eventElements.animate[i]);
+	}
+	
+	if(eventElements.wiggle != undefined) {
+		for(let i in eventElements.wiggle)
+			result += wiggleToJavascript(eventElements.wiggle[i]);
+	}
+	
+	if(eventElements.stop != undefined) {
+		for(let i in eventElements.stop)
+			result += stopToJavascript(eventElements.stop[i]);
+	}
+	
+	if(eventElements.wait != undefined) {
+		for(let i in eventElements.wait)
+			result += waitToJavascript(eventElements.wait[i]);
+	}
+	
+	if(eventElements.play != undefined) {
+		for(let i in eventElements.play)
+			result += playToJavascript(eventElements.play[i]);
+	}
+	
+	if(eventElements.end != undefined) {
+		for(let i in eventElements.end)
+			result += endToJavascript(eventElements.end[i]);
+	}
+	
 	return result;
 }
 
-function wiggleToJavascript(element) {
-	return "var wiggleObj = new readyObj.wiggle('" + element.name + "', '" + element.tagetType + "s', '" + element.target + "', '" + element.property + "', " + element.amplitude + ", " + element.frequency + ", '" + element.ease + "');wiggleObj.start();";
-}
-
-function waitToJavascript(element) {
-	var result = "canvas.Timeline.new(readyObj.button).wait(" + element.duration + ").call(";
+function animateToJavascript(element) {
 	
-	if(element.childElements.length != 0)
-		result += "function() {" + eventToJavascript(element.childElements) + "}";
-	
-	result += ");";
-	return result;
-}
-
-function stopToJavascript(element) {
-	return "readyObj.materials.wiggles." + element.target + ".stop();";
-}
-
-function playToJavascript(element) {
-	var result = "";
-	if(element.targetType == "animation" || element.targetType == "video") {
-		result = "readyObj.materials." + element.targetType + "s." + element.target + ".play('" + element.loop + "'";
-		if(element.childElements.length != 0)
-			result += "," + "function() {" + eventToJavascript(element.childElements) + "}";
-		result += ");";
-	}
-	else if(element.targetType == "sound") {
-		result = "canvas.Sound.";
-		if(element.loop == "loop")
-			result += "playLoop('" + element.target + "');";
-		else
-			result += "get('" + element.target + "').play();";
-	}
+	var result = "page.get('" + element.target + "').to({" + element.property + ":" + element.value + "}, " + element.duration + ", createjs.Ease." + element.ease + ").call(function() {";
+	result += eventToJavascript(element);
+	result += "});";
 	
 	return result;
 }
@@ -158,23 +158,24 @@ function endToJavascript(element) {
 	return "callback();";
 }
 
-function animateToJavascript(element) {
-	var result = "";
-	if(element.targetType != "sound") {
-		result = "canvas.Timeline.new(readyObj.materials." + element.targetType + "s." + element.target + ").to({" + element.property + ":" + element.value + "}, " + element.duration + ", Ease." + element.ease + ").call(";
-		
-		if(element.childElements.length != 0)
-			result += "function() {" + eventToJavascript(element.childElements) + "}";
-	}
-	else if(element.property == "volume") {
-		result = "canvas.Sound.fadeTo('" + element.target + "', " + element.duration + ", " + element.value + "";
-		
-		if(element.childElements.length != 0)
-			result += ", function() {" + eventToJavascript(element.childElements) + "}";
-	}
-	
-	result += ");";
+function waitToJavascript(element) {
+	var result = "createjs.Tween.get(novent.button.graphics).wait(" + element.duration + ").call(";
+	result += "function() {" + eventToJavascript(element) + "});";
 	return result;
-}*/
+}
+
+function playToJavascript(element) {
+	var result = "page.materials.get('" + element.target + "').play('" + element.loop + "', function() {" + eventToJavascript(element) + "});";
+	return result;
+}
+
+function wiggleToJavascript(element) {
+	var result = "var wiggle = new NoventEngine.Wiggle(page, " + JSON.stringify(element) + ");wiggle.play();";
+	return result;
+} 
+
+function stopToJavascript(element) {
+	return "page.materials.get('" + element.target + "').stop();";
+}
 
 module.exports = NoventCompiler;

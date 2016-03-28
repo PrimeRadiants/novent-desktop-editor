@@ -94,6 +94,10 @@ if(typeof NoventEngine == "undefined") {
 		
 		novent.readPage = function() {
 			if(novent.index != novent.pages.length) {
+				if(novent.index != 0) {
+					novent.pages[novent.index - 1].removeFromNovent();
+					novent.pages[novent.index - 1].unload();
+				}	
 				novent.pages[novent.index].read();
 				novent.index++;
 			}
@@ -161,8 +165,8 @@ if(typeof NoventEngine == "undefined") {
 		
 		page.materials = new Map();
 		
-		page.get = function(targetName) {
-			return createjs.Tween.get(page.materials.get(targetName).graphics)
+		page.get = function(targetName, options) {
+			return createjs.Tween.get(page.materials.get(targetName).graphics, options)
 		}
 		
 		pageDescriptor.materials.images.forEach(function(e) {
@@ -189,15 +193,25 @@ if(typeof NoventEngine == "undefined") {
 			for(var m of page.materials.values()) {
 				m.addToLoadQueue(queue);
 			}
+			
+			queue.on("complete", function() {
+				var sortFunction = function(obj1, obj2, options) {
+					 if (obj1.index > obj2.index) { return 1; }
+					 if (obj1.index < obj2.index) { return -1; }
+					 return 0;
+				}
+				page.container.sortChildren(sortFunction);
+
+			});
+		}
+		
+		page.unload = function() {
+			for(var m of page.materials.values()) {
+				delete m;
+			}
 		}
 		
 		page.appendToNovent = function() {
-			var sortFunction = function(obj1, obj2, options) {
-				 if (obj1.index > obj2.index) { return 1; }
-				 if (obj1.index < obj2.index) { return -1; }
-				 return 0;
-			}
-			page.container.sortChildren(sortFunction);
 			page.novent.stage.addChild(page.container);
 		}
 		
@@ -208,6 +222,7 @@ if(typeof NoventEngine == "undefined") {
 		page.waiting = false;
 		page.index = 0;
 		page.events = new Array();
+		page.animates = new Map();
 		page.addEvent = function(funct) {
 			page.events.push(new NoventEngine.Event(page, funct));
 			return page.events[page.events.length - 1];
@@ -312,6 +327,8 @@ if(typeof NoventEngine == "undefined") {
 		video.id = page.name + ":" + video.name;
 		video.src = videoDescriptor.src;
 		
+		var playing = false;
+		
 		video.addToLoadQueue = function(queue) {
 			//Adding src to novent global load queue
 			queue.loadFile({id:video.id, src: video.src});
@@ -333,13 +350,18 @@ if(typeof NoventEngine == "undefined") {
 			});
 		}
 		
+		var eventAftermath;
+		
 		video.play = function(type, callback) {
-			video.element.addEventListener('ended', function () {
+			video.element.removeEventListener('ended', eventAftermath, false);
+			
+			eventAftermath = function () {
 				if(type == "loop") {
-					
-					this.currentTime = 0;
-					this.play();
-					video.graphics.image.readyState = 4;
+					if(playing) {
+						this.currentTime = 0;
+						this.play();
+						video.graphics.image.readyState = 4;
+					}
 				}
 				else if(type == "remove") {
 					video.page.container.removeChild(video.graphics);
@@ -350,8 +372,15 @@ if(typeof NoventEngine == "undefined") {
 					if(callback != undefined)
 						callback();
 				}
-			}, false);
+			}
+
+			video.element.addEventListener('ended', eventAftermath, false);
+			playing = true;
 			video.element.play();
+		}
+		
+		video.stop = function() {
+			playing = false;
 		}
 		
 		return video;
@@ -368,6 +397,8 @@ if(typeof NoventEngine == "undefined") {
 		animation.width = animationDescriptor.width;
 		animation.framerate = animationDescriptor.framerate;
 		animation.frames = animationDescriptor.frames;
+		
+		var playing = false;
 		
 		animation.addToLoadQueue = function(queue) {
 			//Adding src to novent global load queue
@@ -406,13 +437,18 @@ if(typeof NoventEngine == "undefined") {
 					animation.graphics.stop();
 					animation.page.container.removeChild(animation.graphics);
 				}
-				else if(type == "stop") {
+				else if(type == "stop" || !playing) {
 					if(callback != undefined)
 						callback();
 					animation.graphics.stop();
 				}
 			});
+			playing = true;
 			animation.graphics.gotoAndPlay("animation");
+		}
+		
+		animation.stop = function() {
+			playing = false;
 		}
 		
 		return animation;
@@ -465,36 +501,87 @@ if(typeof NoventEngine == "undefined") {
 		sound.id = page.name + ":" + sound.name;
 		sound.src = soundDescriptor.src;
 		
+		var playing = false;
+		
 		sound.addToLoadQueue = function(queue) {
 			queue.loadFile({id:sound.id, src: sound.src});
 			
 			queue.on("fileload", function(event) {
 				if(event.item.id == sound.id) {
-					sound.element = event.result;
-					console.log(sound.element);
+					sound.graphics = event.result;
 					//Setting the properties of the graphical object (x, y, ...)
 					for(key in soundDescriptor) {
 						if(key != undefined)
-							sound.element[key] = soundDescriptor[key];
+							sound.graphics[key] = soundDescriptor[key];
 					}
 				}
 			});
 		}
 		
 		sound.play = function(type, callback) {
-			sound.element.addEventListener('ended', function () {
+			sound.graphics.addEventListener('ended', function () {
 				if(type == "loop") {
-					sound.element.play();
+					if(playing)
+						sound.graphics.play();
 				}
 				else if(type == "stop") {
 					if(callback != undefined)
 						callback();
 				}
 			});
-			sound.element.play();
+			playing = true;
+			sound.graphics.play();
+		}
+		
+		sound.stop = function() {
+			playing = false;
 		}
 		
 		return sound;
+	}
+	
+	NoventEngine.Wiggle = function(page, wiggleDescriptor) {
+		var wiggle = this;
+		wiggle.name = wiggleDescriptor.name;
+		wiggle.target = wiggleDescriptor.target;
+		wiggle.property = wiggleDescriptor.property;
+		wiggle.amplitude = wiggleDescriptor.amplitude;
+		wiggle.frequency = wiggleDescriptor.frequency;
+		wiggle.ease = wiggleDescriptor.ease;
+		
+		var minValue;
+		var originValue;
+		var playing = false;
+
+		wiggle.stop = function() {
+			playing = false;
+		};
+		
+		function loop() {
+			if(playing) {
+				var value = minValue + Math.random()*2*wiggle.amplitude;
+				var change = new Object();
+				change[wiggle.property] = value;
+				page.get(wiggle.target).to(change, wiggle.frequency, createjs.Ease[wiggle.ease]).call(function() {
+					loop();
+				});
+			}
+			else {
+				var change = new Object();
+				change[wiggle.property] = originValue;
+				page.get(wiggle.target).to(change, wiggle.frequency, createjs.Ease[wiggle.ease]);
+			}
+		}
+
+		wiggle.play = function() {
+			originValue = page.materials.get(wiggle.target).graphics[wiggle.property];
+			minValue = originValue - wiggle.amplitude;
+			playing = true;
+			page.materials.set(wiggle.name, wiggle);
+			loop();
+		};
+
+		return wiggle;
 	}
 	
 	NoventEngine.NoventDefinitionError = function(message) {

@@ -39,13 +39,13 @@ app.controller('editorController', function($scope, $interval) {
 			//- 1 <end/> per event
 			//- existing target for animate, play & stop tags
 			//- animate value attr (positive integer etc.)
+			//- animate loop = true || wiggle = true, no child
 
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
 				
 				xml2js.parseString(text, function (err, result) {
 					$scope.novent = result.novent;
-					console.log($scope.novent);
 				});
 			});
 			
