@@ -1,23 +1,21 @@
 <novent width="2048" height="2736">
-	<button src="images/button.png" x="951" y="2500" width="145" height="145" />
+	<button src="images/button.png" x="951" y="2500" />
 	
 	<page name="intro">
 		<materials>
-			<image name="begin" src="images/begin.png" x="722" y="2300" width="604" height="168" opacity="0" />
+			<image name="begin" src="images/begin.png" x="722" y="2300" alpha="0" />
 		</materials>
 		
-		<events>
-			<event>
-				<animate target="image:begin" property="opacity" value="1" duration="60" ease="easeInQuad">
-					<end />
-				</animate>
-			</event>
-			
-			<event>
-				<animate target="image:begin" property="opacity" value="0" duration="60" ease="easeInQuad">
-					<end />
-				</animate>
-			</event>
-		</events>
+      <event>
+        <animate target="begin" property="alpha" value="1" duration="1000" ease="quadIn">
+          <end />
+        </animate>
+      </event>
+
+      <event>
+        <animate target="begin" property="alpha" value="0" duration="1000" ease="quadIn">
+          <end />
+        </animate>
+      </event>
 	</page>
 </novent>
