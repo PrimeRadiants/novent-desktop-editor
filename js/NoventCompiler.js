@@ -64,37 +64,39 @@ function normalizeNoventObject(novent) {
 		domNomalized.pages[i].materials.sounds = new Array();
 		domNomalized.pages[i].materials.texts = new Array();
 		
-		if(domNomalized.pages[i].materials.image != undefined) {
-			for(let j in domNomalized.pages[i].materials.image)
-				domNomalized.pages[i].materials.images[j] = domNomalized.pages[i].materials.image[j];
-			
-			delete domNomalized.pages[i].materials.image;
-		}
-		if(domNomalized.pages[i].materials.animation != undefined) {
-			for(let j in domNomalized.pages[i].materials.animation)
-				domNomalized.pages[i].materials.animations[j] = domNomalized.pages[i].materials.animation[j];
-			
-			delete domNomalized.pages[i].materials.animation;
-		}
-		if(domNomalized.pages[i].materials.video != undefined) {
-			for(let j in domNomalized.pages[i].materials.video)
-				domNomalized.pages[i].materials.videos[j] = domNomalized.pages[i].materials.video[j];
-			
-			delete domNomalized.pages[i].materials.video;
-		}
-		if(domNomalized.pages[i].materials.sound != undefined) {
-			for(let j in domNomalized.pages[i].materials.sound)
-				domNomalized.pages[i].materials.sounds[j] = domNomalized.pages[i].materials.sound[j];
-			
-			delete domNomalized.pages[i].materials.sound;
-		}
-		if(domNomalized.pages[i].materials.text != undefined) {
-			for(let j in domNomalized.pages[i].materials.text)
-				domNomalized.pages[i].materials.texts[j] = domNomalized.pages[i].materials.text[j];
-			
-			delete domNomalized.pages[i].materials.text;
+		for(let j in domNomalized.pages[i].materials.$$) {
+			if(domNomalized.pages[i].materials.$$[j]["#name"] == "image") {
+				domNomalized.pages[i].materials.$$[j].index = j;
+				domNomalized.pages[i].materials.images.push(domNomalized.pages[i].materials.$$[j]);
+			}
+				
+			if(domNomalized.pages[i].materials.$$[j]["#name"] == "animation") {
+				domNomalized.pages[i].materials.$$[j].index = j;
+				domNomalized.pages[i].materials.animations.push(domNomalized.pages[i].materials.$$[j]);
+			}
+				
+			if(domNomalized.pages[i].materials.$$[j]["#name"] == "video") {
+				domNomalized.pages[i].materials.$$[j].index = j;
+				domNomalized.pages[i].materials.videos.push(domNomalized.pages[i].materials.$$[j]);
+			}
+				
+			if(domNomalized.pages[i].materials.$$[j]["#name"] == "sound") {
+				domNomalized.pages[i].materials.$$[j].index = j;
+				domNomalized.pages[i].materials.sounds.push(domNomalized.pages[i].materials.$$[j]);
+			}
+				
+			if(domNomalized.pages[i].materials.$$[j]["#name"] == "text") {
+				domNomalized.pages[i].materials.$$[j].index = j;
+				domNomalized.pages[i].materials.texts.push(domNomalized.pages[i].materials.$$[j]);
+			}
 		}
 		
+		delete domNomalized.pages[i].materials.image;
+		delete domNomalized.pages[i].materials.animation;
+		delete domNomalized.pages[i].materials.video;
+		delete domNomalized.pages[i].materials.sound;
+		delete domNomalized.pages[i].materials.text;
+				
 		domNomalized.pages[i].events = new Array();
 		for(let j in domNomalized.pages[i].event)
 			domNomalized.pages[i].events.push(domNomalized.pages[i].event[j]);
