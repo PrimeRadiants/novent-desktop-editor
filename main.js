@@ -188,7 +188,6 @@ ipcMain.on('create-new-project', function(event, arg) {
 });
 
 function createNewProject(projectName, projectPath) {
-	console.log("test");
 	if(!fs.existsSync(projectPath + "/" + projectName)) {
 		fs.mkdir(projectPath + "/" + projectName, (err) => {
 			fs.writeFile(projectPath + "/" + projectName + "/" + projectName + '.noventproj', '', (err) => {

@@ -5,7 +5,6 @@ var NoventCompiler = new Object();
 
 NoventCompiler.compile = function(novent, startPageIndex) {	
 	var normalizedNovent = normalizeNoventObject(novent);
-	console.log(normalizedNovent);
 	
 	var script = "var novent = new NoventEngine.Novent(\"canvas_id\", " + normalizedNovent.width + "," + normalizedNovent.height + "," + JSON.stringify(normalizedNovent.button) + ");";
 	
@@ -48,7 +47,6 @@ function normalizeDomObject(domObject) {
 
 function normalizeNoventObject(novent) {
 	var domNomalized = normalizeDomObject(novent);
-	console.log(domNomalized);
 	
 	domNomalized.button = domNomalized.button[0];
 	domNomalized.pages = new Array();

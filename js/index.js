@@ -44,11 +44,9 @@ app.controller('editorController', function($scope, $interval) {
 			
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
-				console.log(xmlDoc.validationErrors)
 				var parser = new xml2js.Parser({explicitChildren:true, preserveChildrenOrder:true});
 				parser.parseString(text, function (err, result) {
 					$scope.novent = result.novent;
-					console.log($scope.novent);
 				});
 			});
 			
@@ -304,10 +302,6 @@ app.controller('editorController', function($scope, $interval) {
 			resizeEditorPreview = false;
 			$("#top-section").css("cursor", "default");
 		});
-		
-		/*$(".resize-editor-preview").mouseleave(function() {
-			resizeEditorPreview = false;
-		});*/
 		
 		$("#top-section").mousemove(function(event) {
 			if(resizeEditorPreview && !$scope.isInPreview) {
