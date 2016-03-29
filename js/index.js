@@ -39,9 +39,9 @@ app.controller('editorController', function($scope, $interval) {
 			//- 1 <end/> per event
 			//- existing target for animate, play & stop tags
 			//- animate value attr (positive integer etc.)
-			//- animate loop = true || wiggle = true, no child
 			
 			validateNoventSrcs(xmlDoc);
+			validateEndTagNumber(xmlDoc);
 			
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
@@ -85,6 +85,15 @@ app.controller('editorController', function($scope, $interval) {
 		for(var i in srcAttrs) {
 			if(!fs.existsSync($scope.projectPath + "/" + srcAttrs[i].value()))
 				xmlDoc.validationErrors.push({line: srcAttrs[i].line(), column: 0, message: "Attribute 'src': '" + srcAttrs[i].value() + "' is not a valid value: file is missing in project path."});
+		}
+	}
+	
+	function validateEndTagNumber(xmlDoc) {
+		var eventTags = xmlDoc.find("//event");
+		for(var i in eventTags) {
+			var ends = eventTags[i].find(".//end");
+			if(ends.length != 1)
+				xmlDoc.validationErrors.push({line: eventTags[i].line(), column: 0, message: "Invalid event structure: there must be one and only one end tag in each event."});
 		}
 	}
 	
