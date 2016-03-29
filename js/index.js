@@ -36,7 +36,6 @@ app.controller('editorController', function($scope, $interval) {
 			xmlDoc.validate(xsdDoc);
 			
 			//TODO: post validation:
-			//- existing target for animate, play & stop tags
 			//- animate value attr (positive integer etc.)
 			
 			validateNoventSrcs(xmlDoc);
@@ -171,9 +170,7 @@ app.controller('editorController', function($scope, $interval) {
 			$scope.editor.getWrapperElement().style.fontSize = $scope.fontSize + "px";
 		}
 	}
-	
-	editor = $scope.editor;
-	
+		
 	fs.readFile($scope.projectPath + "/novent-descriptor.xml", 'utf8', (err, data) => {
 	  if (err) {
 		ipcRenderer.send('project-error', err); 
@@ -181,11 +178,16 @@ app.controller('editorController', function($scope, $interval) {
 	  }
 	  $scope.safeApply(function () {
 		  $scope.editor.setValue(data);	
+		  $scope.editor.clearHistory();	
 		  $scope.savedContent = data;
 		  $scope.canSave = false;
 	  });
 
 	});
+	
+	$scope.search = function() {
+		$scope.editor.execCommand("find");
+	}
 	
 	
 	$scope.previewURI = $scope.projectPath + "/novent.html";

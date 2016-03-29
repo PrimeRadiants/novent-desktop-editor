@@ -51,7 +51,7 @@
 		<span>
 			<i class="fa fa-undo" ng-click="editor.undo()" ng-class="{'disabled': editor.historySize().undo == 0}"></i>
 			<i class="fa fa-repeat" ng-click="editor.redo()" ng-class="{'disabled': editor.historySize().redo == 0}"></i>
-			<i class="fa fa-search"></i>
+			<i class="fa fa-search" ng-click="search()"></i>
 		</span>
 		<span>
 			<i class="fa fa-search-minus" ng-click="zoomOut()" ng-class="{'disabled': fontSize == 1}"></i>
