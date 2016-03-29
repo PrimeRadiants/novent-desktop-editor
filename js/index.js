@@ -40,16 +40,12 @@ app.controller('editorController', function($scope, $interval) {
 			//- existing target for animate, play & stop tags
 			//- animate value attr (positive integer etc.)
 			//- animate loop = true || wiggle = true, no child
-
-			var parseNumbers = function(value){
-				if(/^(\-|\+)?([0-9]+(\.[0-9]+)?|Infinity)$/
-					  .test(value))
-					  return Number(value);
-				  return value;
-			}
+			
+			validateNoventSrcs(xmlDoc);
 			
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
+				console.log(xmlDoc.validationErrors)
 				var parser = new xml2js.Parser({explicitChildren:true, preserveChildrenOrder:true});
 				parser.parseString(text, function (err, result) {
 					$scope.novent = result.novent;
@@ -83,6 +79,14 @@ app.controller('editorController', function($scope, $interval) {
 			return found;
 		}
 	});
+	
+	function validateNoventSrcs(xmlDoc) {
+		var srcAttrs = xmlDoc.find("//@src");
+		for(var i in srcAttrs) {
+			if(!fs.existsSync($scope.projectPath + "/" + srcAttrs[i].value()))
+				xmlDoc.validationErrors.push({line: srcAttrs[i].line(), column: 0, message: "Attribute 'src': '" + srcAttrs[i].value() + "' is not a valid value: file is missing in project path."});
+		}
+	}
 	
 	$scope.editor = CodeMirror.fromTextArea(document.getElementById("editor-textarea"), {
 	  lineNumbers: true,
