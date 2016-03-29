@@ -36,12 +36,12 @@ app.controller('editorController', function($scope, $interval) {
 			xmlDoc.validate(xsdDoc);
 			
 			//TODO: post validation:
-			//- 1 <end/> per event
 			//- existing target for animate, play & stop tags
 			//- animate value attr (positive integer etc.)
 			
 			validateNoventSrcs(xmlDoc);
 			validateEndTagNumber(xmlDoc);
+			validateTargetValues(xmlDoc);
 			
 			$scope.safeApply(function () {
 				$scope.noventErrors = xmlDoc.validationErrors;
@@ -94,6 +94,31 @@ app.controller('editorController', function($scope, $interval) {
 			var ends = eventTags[i].find(".//end");
 			if(ends.length != 1)
 				xmlDoc.validationErrors.push({line: eventTags[i].line(), column: 0, message: "Invalid event structure: there must be one and only one end tag in each event."});
+		}
+	}
+	
+	function validateTargetValues(xmlDoc) {
+		var pageTags = xmlDoc.find("//page");
+		
+		for(var i in pageTags) {			
+			var targetAttrs = pageTags[i].find(".//@target");
+			for(var j in targetAttrs) {
+				var target = targetAttrs[j].value();
+				var targetNode = pageTags[i].find(".//*[@name='" + target + "']");
+				var nodeName = targetAttrs[j].parent().name();
+				
+				if(targetNode.length == 0)
+					xmlDoc.validationErrors.push({line: targetAttrs[j].line(), column: 0, message: "Attribute 'target': '" + targetAttrs[j].value() + "' is not a valid value: no materials with this name."});
+				else {
+					var targetNodeName = targetNode[0].name();
+					if(nodeName == "play" && !(targetNodeName == "sound" || targetNodeName == "animation" || targetNodeName == "video"))
+						xmlDoc.validationErrors.push({line: targetAttrs[j].line(), column: 0, message: "Attribute 'target': '" + targetAttrs[j].value() + "' is not a valid value: play event can only apply on sounds, animations and videos."});
+					else if(nodeName == "stop" && !(targetNodeName == "sound" || targetNodeName == "animation" || targetNodeName == "video" || targetNodeName == "wiggle"))
+						xmlDoc.validationErrors.push({line: targetAttrs[j].line(), column: 0, message: "Attribute 'target': '" + targetAttrs[j].value() + "' is not a valid value: play event can only apply on sounds, animations, videos and wiggles."});
+				}
+
+			}
+			
 		}
 	}
 	
