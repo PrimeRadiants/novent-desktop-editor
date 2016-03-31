@@ -31,6 +31,7 @@ else {
 }
 
 function updateRecentProjects(newProjectPath) {
+	newProjectPath = newProjectPath.replace(new RegExp("/", 'g'), "\\")
 	if(global.recentProjects.indexOf(newProjectPath) != -1)
 		global.recentProjects.splice(global.recentProjects.indexOf(newProjectPath), 1);
 	else if(global.recentProjects.length == 20)
