@@ -189,9 +189,9 @@ function createNewProject(projectName, projectPath) {
 		fs.writeFileSync(projectPath + "/" + projectName + "/" + projectName + '.noventproj');
 		fs.copySync(__dirname + "/project-resources/sample-descriptor.xml", projectPath + "/" + projectName + "/novent-descriptor.xml");
 		fs.copySync(__dirname + "/project-resources/button.png", projectPath + "/" + projectName + "/images/button.png");
-		fs.copy(__dirname + "/project-resources/begin.png", projectPath + "/" + projectName + "/images/begin.png");
+		fs.copySync(__dirname + "/project-resources/begin.png", projectPath + "/" + projectName + "/images/begin.png");
 		
-		global.filePath = projectPath + "\\" + projectName + "\\" + projectName + '.noventproj';
+		global.filePath = projectPath + "/" + projectName + "/" + projectName + '.noventproj';
 		updateRecentProjects(global.filePath);
 		openEditor();
 	}
