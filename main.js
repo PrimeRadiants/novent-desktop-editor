@@ -220,9 +220,7 @@ app.on('open-file', function(e, path) {
 app.on('ready', main);
 
 app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
     app.quit();
-  }
 });
 
 app.on('activate', function () {
