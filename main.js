@@ -30,7 +30,7 @@ else {
 	});
 }
 
-function updateReventProjects(newProjectPath) {
+function updateRecentProjects(newProjectPath) {
 	if(global.recentProjects.indexOf(newProjectPath) != -1)
 		global.recentProjects.splice(global.recentProjects.indexOf(newProjectPath), 1);
 	else if(global.recentProjects.length == 20)
@@ -83,40 +83,37 @@ ipcMain.on('project-error', function(event, arg) {
 });
 
 function openEditor() {
-	fs.exists(path.dirname(global.filePath) + "/novent-descriptor.xml", function(exists) {
-		if(exists) {
-			if(mainWindow != null) {
-				mainWindow.reload();
-				return;
-			}
-				
-			
-			mainWindow = new BrowserWindow({width: 600, height: 800});
-			mainWindow.setMenu(null);
-			mainWindow.maximize();
-			mainWindow.loadURL('file://' + __dirname + '/index.html');
-			
-			if(dialogWindow != null)
-				dialogWindow.close();
-			
-			if(newProjectWindow != null)
-				newProjectWindow.close();
-			
-			
-			mainWindow.on('close', function(event) {
-				event.preventDefault();
-				mainWindow.webContents.send("save-before-close");
-			});
-			
-			mainWindow.on('closed', function() {
-				mainWindow = null;
-			});
+	if(fs.existsSync(path.dirname(global.filePath) + "/novent-descriptor.xml")) {
+		if(mainWindow != null) {
+			mainWindow.reload();
+			return;
 		}
-		else {
-			dialog.showErrorBox("Novent project error", "Invalid project directory: missing novent-descriptor.xml");
-		}
-	});
-	
+			
+		
+		mainWindow = new BrowserWindow({width: 600, height: 800});
+		mainWindow.setMenu(null);
+		mainWindow.maximize();
+		mainWindow.loadURL('file://' + __dirname + '/index.html');
+		
+		if(dialogWindow != null)
+			dialogWindow.close();
+		
+		if(newProjectWindow != null)
+			newProjectWindow.close();
+		
+		
+		mainWindow.on('close', function(event) {
+			event.preventDefault();
+			mainWindow.webContents.send("save-before-close");
+		});
+		
+		mainWindow.on('closed', function() {
+			mainWindow = null;
+		});
+	}
+	else {
+		dialog.showErrorBox("Novent project error", "Invalid project directory: missing novent-descriptor.xml");
+	}
 }
 
 ipcMain.on('save-before-change-dialog', function(event, arg) {
@@ -128,7 +125,7 @@ ipcMain.on('save-before-change-dialog', function(event, arg) {
 function openExistingProject(path) {
 	if(fs.existsSync(path)) {
 		global.filePath = path;
-		updateReventProjects(global.filePath);
+		updateRecentProjects(global.filePath);
 		openEditor();
 	}
 	else {
@@ -146,7 +143,7 @@ function openExistingProjectDialog() {
 
 		//Resolve file name without extension
 		global.filePath = filePaths[0];
-		updateReventProjects(global.filePath);
+		updateRecentProjects(global.filePath);
 		openEditor();
 	});
 }
@@ -188,36 +185,15 @@ ipcMain.on('create-new-project', function(event, arg) {
 
 function createNewProject(projectName, projectPath) {
 	if(!fs.existsSync(projectPath + "/" + projectName)) {
-		fs.mkdir(projectPath + "/" + projectName, (err) => {
-			fs.writeFile(projectPath + "/" + projectName + "/" + projectName + '.noventproj', '', (err) => {
-			  if (err) {
-				dialog.showErrorBox("Novent project error", JSON.stringify(err));
-				return;  
-			  }
-			  
-			  fs.copy(__dirname + "/project-resources/sample-descriptor.xml", projectPath + "/" + projectName + "/novent-descriptor.xml", function (err2) {
-				  if (err2) {
-					dialog.showErrorBox("Novent project error", JSON.stringify(err2));
-					return;  
-				  }
-				  fs.copy(__dirname + "/project-resources/button.png", projectPath + "/" + projectName + "/images/button.png", function (err3) {
-					  if (err3) {
-						dialog.showErrorBox("Novent project error", JSON.stringify(err3));
-						return;  
-					  }
-					  fs.copy(__dirname + "/project-resources/begin.png", projectPath + "/" + projectName + "/images/begin.png", function (err4) {
-						  if (err4) {
-							dialog.showErrorBox("Novent project error", JSON.stringify(err4));
-							return;  
-						  }
-						  global.filePath = projectPath + "\\" + projectName + "\\" + projectName + '.noventproj';
-						  updateReventProjects(global.filePath);
-						  openEditor();
-					  });
-				  });
-			  });
-			});
-		});
+		fs.mkdirSync(projectPath + "/" + projectName);
+		fs.writeFileSync(projectPath + "/" + projectName + "/" + projectName + '.noventproj');
+		fs.copySync(__dirname + "/project-resources/sample-descriptor.xml", projectPath + "/" + projectName + "/novent-descriptor.xml");
+		fs.copySync(__dirname + "/project-resources/button.png", projectPath + "/" + projectName + "/images/button.png");
+		fs.copy(__dirname + "/project-resources/begin.png", projectPath + "/" + projectName + "/images/begin.png");
+		
+		global.filePath = projectPath + "\\" + projectName + "\\" + projectName + '.noventproj';
+		updateRecentProjects(global.filePath);
+		openEditor();
 	}
 	else {
 		dialog.showErrorBox("Novent project error", "Folder " + projectPath + "/" + projectName + " already exists.");
