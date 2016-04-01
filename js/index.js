@@ -30,7 +30,7 @@ app.controller('editorController', function($scope, $interval) {
 			return found;
 		
 		try {
-			var xsd = fs.readFileSync("project-resources/novent-descriptor-0.1.xsd", "utf8");
+			var xsd = fs.readFileSync(remote.getGlobal('dirname') + "/project-resources/novent-descriptor-0.1.xsd", "utf8");
 			var xsdDoc = libxml.parseXml(xsd);
 			var xmlDoc = libxml.parseXml(text);
 			xmlDoc.validate(xsdDoc);

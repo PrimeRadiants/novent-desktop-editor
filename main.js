@@ -10,6 +10,26 @@ const path = require('path');
 const Menu = electron.Menu;
 const ipcMain = electron.ipcMain;
 
+var template = [{
+    label: "Novent Studio",
+    submenu: [
+        { label: "About Application", selector: "orderFrontStandardAboutPanel:" },
+        { type: "separator" },
+        { label: "Quit", accelerator: "Command+Q", click: function() { app.quit(); }}
+    ]}, {
+    label: "Edit",
+    submenu: [
+        { label: "Undo", accelerator: "CmdOrCtrl+Z", selector: "undo:" },
+        { label: "Redo", accelerator: "Shift+CmdOrCtrl+Z", selector: "redo:" },
+        { type: "separator" },
+        { label: "Cut", accelerator: "CmdOrCtrl+X", selector: "cut:" },
+        { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+        { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+        { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" }
+    ]}
+];
+
+
 let dialogWindow;
 let mainWindow;
 let newProjectWindow;
@@ -43,6 +63,7 @@ function updateRecentProjects(newProjectPath) {
 }
 
 function main() {
+	Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 	if(global.filePath != null && path.extname(process.argv[1]) == ".noventproj")
 	 global.filePath = process.argv[1];
   
@@ -95,7 +116,7 @@ function openEditor() {
 		mainWindow.setMenu(null);
 		mainWindow.maximize();
 		mainWindow.loadURL('file://' + __dirname + '/index.html');
-		
+
 		if(dialogWindow != null)
 			dialogWindow.close();
 		
