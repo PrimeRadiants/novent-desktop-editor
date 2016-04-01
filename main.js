@@ -95,7 +95,7 @@ function openEditor() {
 		mainWindow.setMenu(null);
 		mainWindow.maximize();
 		mainWindow.loadURL('file://' + __dirname + '/index.html');
-		
+
 		if(dialogWindow != null)
 			dialogWindow.close();
 		
