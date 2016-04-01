@@ -351,6 +351,7 @@ if(typeof NoventEngine == "undefined") {
 		}
 		
 		var eventAftermath;
+		var secondVideo;
 		
 		video.play = function(type, callback) {
 			video.element.removeEventListener('ended', eventAftermath, false);
@@ -358,9 +359,14 @@ if(typeof NoventEngine == "undefined") {
 			eventAftermath = function () {
 				if(type == "loop") {
 					if(playing) {
-						this.currentTime = 0;
-						this.play();
-						video.graphics.image.readyState = 4;
+						video.element = secondVideo;
+						var newGraphics = new createjs.Bitmap(video.element);
+						video.page.container.addChild(newGraphics);
+						video.element.play();
+						video.page.container.removeChild(video.graphics);
+						video.graphics = newGraphics;
+						secondVideo = video.element.cloneNode(true);
+						video.element.addEventListener('ended', eventAftermath, false);
 					}
 				}
 				else if(type == "remove") {
@@ -376,6 +382,11 @@ if(typeof NoventEngine == "undefined") {
 
 			video.element.addEventListener('ended', eventAftermath, false);
 			playing = true;
+			
+			if(type == "loop") {
+				secondVideo = video.element.cloneNode(true);
+			}
+			
 			video.element.play();
 		}
 		
