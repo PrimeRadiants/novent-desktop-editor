@@ -1,8 +1,57 @@
 <!DOCTYPE html>
 <html style="background:black;">
 <meta charset="utf-8">
+<style>
+	#loader {
+		-webkit-transition: opacity 2s ease-in-out;
+		-moz-transition: opacity 2s ease-in-out;
+		-ms-transition: opacity 2s ease-in-out;
+		-o-transition: opacity 2s ease-in-out;
+		 opacity: 1;
+	}
+	#loader canvas {
+		position: absolute;
+		bottom: 0px;
+		margin: auto;
+		left: 0px;
+		right: 0px;
+		top: 0px;
+	}
+</style>
+<script src="circular-progress.min.js"></script>
 <script src="createjs-2015.11.26.min.js"></script>
 <script src="novent-engine-0.1.js"></script>
 <canvas id="canvas_id" width="2048" height="2736" style="background:black"></canvas>
+<div id="loader"></div>
+<script>
+	var progress;
+
+      progress = new CircularProgress({
+        radius: 30,
+        strokeStyle: '#004a4f',
+        lineCap: 'square',
+        lineJoin: 'round',
+        lineWidth: 2,
+        text: {
+          font: 'bold 15px arial',
+          shadowBlur: 0,
+		  fillStyle: '#004a4f'
+        },
+        initial: {
+          strokeStyle: 'transparent',
+          lineCap: 'square',
+          lineJoin: 'round',
+          lineWidth: 5,
+        }
+      });
+
+      document.getElementById("loader").appendChild(progress.el);
+	  
+	  /*n = 0;
+      id = setInterval(function () {
+        if (n == 100) clearInterval(id);
+        progress.update(n++);
+      }, 30);*/
+</script>
 <script src="novent.js"></script>
 </html>

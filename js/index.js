@@ -219,6 +219,7 @@ app.controller('editorController', function($scope, $interval) {
 		fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent.html",$scope.projectPath + "/novent.html");
 		fs.copySync(remote.getGlobal('dirname') + "/project-resources/createjs-2015.11.26.min.js", $scope.projectPath + "/createjs-2015.11.26.min.js");
 		fs.copySync(remote.getGlobal('dirname') + "/project-resources/novent-engine-0.1.js", $scope.projectPath + "/novent-engine-0.1.js");
+		fs.copySync(remote.getGlobal('dirname') + "/project-resources/circular-progress.min.js", $scope.projectPath + "/circular-progress.min.js");
 	}
 	
 	$scope.new = function() {
